@@ -1,61 +1,54 @@
-// Require Dependencies
-const express = require("express");
-const routes = require("./server/routes");
-const path = require("path"); // Path modülünü unutmayalım
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const sequelize = require('./config/database');  // Veritabanı bağlantısı
+const user = require('./models/User');  // Örnek model
+const book = require('./models/Book');  // Kitap modeli (örnek)
+//const book_in_list = require('./models/Book_in_list');  // İnceleme modeli (örnek)
+//const comment = require('./models/Comment');
+//const reading_list = require('./models/reading_list');
+//const review = require('./models/Review');
+
+
+
+// Environment variables
+dotenv.config();
+
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
-// Import Middleware
-const errorHandler = require("./middleware/errorHandler");
+// Middleware
+app.use(bodyParser.json());
+app.use(cors());  // Eğer başka bir origin'den bağlantı yapılacaksa kullanılır
 
-// Import DB
-// Example using MongoDB and Mongoose.js ODM Below
-// Info about MongoDB can be found at https://www.mongodb.com/what-is-mongodb
-// Info about Mongoose.js can be found at https://mongoosejs.com/
-// Uncomment the following lines if you are using MongoDB
-// const mongoose = require("mongoose");
+// API Routes (örnek)
+//const userRouter = require('./routes/userRoutes');  // User route'ları (kendi routes dosyanızı oluşturun)
+//const bookRouter = require('./routes/bookRoutes');  // Book route'ları (kendi routes dosyanızı oluşturun)
 
-// Define middleware here
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+//app.use('/api/users', userRouter);  // User API routes
+//app.use('/api/books', bookRouter);  // Book API routes
 
-// Serve up static assets (usually on Heroku)
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
 
-  // Handle React routing, return all requests to React app
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+// Veritabanı bağlantısını kontrol et
+sequelize.authenticate()
+  .then(() => {
+    console.log('Veritabanı başarıyla bağlandı!');
+  })
+  .catch(err => {
+    console.error('Veritabanı bağlantı hatası:', err);
   });
-}
 
-// Add routes, both API and view
-app.use(routes);
+// Veritabanı senkronizasyonu (force: false, mevcut tablolara dokunmadan senkronize eder)
+sequelize.sync({ force: false })
+  .then(() => {
+    console.log('Veritabanı senkronize edildi!');
+  })
+  .catch(err => {
+    console.error('Veritabanı senkronizasyon hatası:', err);
+  });
 
-// Insert DB Info here =============================
-
-// Example using MongoDB
-// If deployed, use the deployed database. Otherwise, use the local database
-// const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/<Your Database Name>";
-
-// Set mongoose to leverage built-in JavaScript ES6 Promises
-// Connect to the Mongo DB
-// mongoose.Promise = global.Promise;
-// mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-//   .then(() => console.log("MongoDB connected"))
-//   .catch(err => console.error(err));
-
-// ================================================
-
-// Custom middleware for logging or authentication (if needed)
-// Example: Add authentication middleware here
-// const authenticate = require("./middleware/authMiddleware");
-// app.use(authenticate);
-
-// Error handler middleware (added at the end)
-app.use(errorHandler);
-
-// Start the API server
-app.listen(PORT, function () {
-  console.log(`🌎  ==> API server running on PORT ${PORT}!`);
+// Sunucuyu başlat
+app.listen(PORT, () => {
+  console.log(`Sunucu ${PORT} portunda çalışıyor...`);
 });
