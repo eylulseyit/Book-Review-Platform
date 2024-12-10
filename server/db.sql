@@ -1,0 +1,68 @@
+CREATE DATABASE book_site;
+USE book_site;
+
+CREATE TABLE user (
+    user_ID INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hashed VARCHAR(255) NOT NULL,
+    bio TEXT
+);
+
+
+CREATE TABLE book (
+    book_ID INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    genre VARCHAR(100),
+    isbn VARCHAR(13),
+    description TEXT
+);
+
+CREATE TABLE review (
+    review_ID INT AUTO_INCREMENT PRIMARY KEY,
+    user_ID INT NOT NULL,
+    book_ID INT NOT NULL,
+    rating INT CHECK (rating BETWEEN 1 AND 5),
+    review_text TEXT,
+    review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_ID) REFERENCES user(user_ID) ON DELETE CASCADE,
+    FOREIGN KEY (book_ID) REFERENCES book(book_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE comment (
+    comment_ID INT AUTO_INCREMENT PRIMARY KEY,
+    user_ID INT NOT NULL,
+    review_ID INT NOT NULL,
+    comment_text TEXT NOT NULL,
+    comment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_ID) REFERENCES user(user_ID) ON DELETE CASCADE,
+    FOREIGN KEY (review_ID) REFERENCES review(review_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE reading_list (
+    list_ID INT AUTO_INCREMENT PRIMARY KEY,
+    user_ID INT NOT NULL,
+    listname VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_ID) REFERENCES user(user_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE book_in_list (
+    list_ID INT NOT NULL,
+    book_ID INT NOT NULL,
+    progress INT CHECK (progress BETWEEN 0 AND 100),
+    added_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (list_ID, book_ID),
+    FOREIGN KEY (list_ID) REFERENCES reading_list(list_ID) ON DELETE CASCADE,
+    FOREIGN KEY (book_ID) REFERENCES book(book_ID) ON DELETE CASCADE
+);
+
+CREATE TABLE recommendation (
+    recommendation_ID INT AUTO_INCREMENT PRIMARY KEY,
+    user_ID INT NOT NULL,
+    book_ID INT NOT NULL,
+    recommendation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_ID) REFERENCES user(user_ID) ON DELETE CASCADE,
+    FOREIGN KEY (book_ID) REFERENCES book(book_ID) ON DELETE CASCADE
+);
+
