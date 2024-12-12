@@ -1,54 +1,69 @@
+// server.js
 const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const sequelize = require('./config/database');  // Veritabanı bağlantısı
-const user = require('./models/User');  // Örnek model
-const book = require('./models/Book');  // Kitap modeli (örnek)
-//const book_in_list = require('./models/Book_in_list');  // İnceleme modeli (örnek)
-//const comment = require('./models/Comment');
-//const reading_list = require('./models/reading_list');
-//const review = require('./models/Review');
-
-
-
-// Environment variables
-dotenv.config();
-
+const mysql = require('mysql2');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const cors = require('cors');
 
-// Middleware
-app.use(bodyParser.json());
-app.use(cors());  // Eğer başka bir origin'den bağlantı yapılacaksa kullanılır
+app.use(express.json());
+app.use(cors());
 
-// API Routes (örnek)
-//const userRouter = require('./routes/userRoutes');  // User route'ları (kendi routes dosyanızı oluşturun)
-//const bookRouter = require('./routes/bookRoutes');  // Book route'ları (kendi routes dosyanızı oluşturun)
+// MySQL bağlantısı
+const db = mysql.createConnection({
+  host: 'localhost',
+  user: 'root',
+  password: 'root',
+  database: 'book_site'
+});
 
-//app.use('/api/users', userRouter);  // User API routes
-//app.use('/api/books', bookRouter);  // Book API routes
+db.connect(err => {
+  if (err) {
+    console.error('Veritabanı bağlantı hatası: ', err);
+  } else {
+    console.log('Veritabanına bağlanıldı.');
+  }
+});
 
-
-// Veritabanı bağlantısını kontrol et
-sequelize.authenticate()
-  .then(() => {
-    console.log('Veritabanı başarıyla bağlandı!');
-  })
-  .catch(err => {
-    console.error('Veritabanı bağlantı hatası:', err);
+// Kullanıcıları ve kitapları listeleme API'ları
+app.get('/api/books', (req, res) => {
+  db.query('SELECT * FROM books', (err, results) => {
+    if (err) {
+      res.status(500).json({ error: 'Kitaplar yüklenemedi.' });
+    } else {
+      res.json(results);
+    }
   });
+});
 
-// Veritabanı senkronizasyonu (force: false, mevcut tablolara dokunmadan senkronize eder)
-sequelize.sync({ force: false })
-  .then(() => {
-    console.log('Veritabanı senkronize edildi!');
-  })
-  .catch(err => {
-    console.error('Veritabanı senkronizasyon hatası:', err);
+// Kullanıcı profilini getirme API'si
+app.get('/api/user/:id', (req, res) => {
+  const { id } = req.params;
+  db.query('SELECT * FROM users WHERE id = ?', [id], (err, results) => {
+    if (err) {
+      res.status(500).json({ error: 'Kullanıcı bilgileri yüklenemedi.' });
+    } else {
+      res.json(results[0]);
+    }
   });
+});
 
-// Sunucuyu başlat
+// Kitap ekleme API'si
+app.post('/api/books', (req, res) => {
+  const { title, author, description } = req.body;
+  db.query(
+    'INSERT INTO books (title, author, description) VALUES (?, ?, ?)',
+    [title, author, description],
+    (err, results) => {
+      if (err) {
+        res.status(500).json({ error: 'Kitap eklenemedi.' });
+      } else {
+        res.status(201).json({ message: 'Kitap başarıyla eklendi.' });
+      }
+    }
+  );
+});
+
+// Sunucuyu başlatma
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Sunucu ${PORT} portunda çalışıyor...`);
+  console.log(`Sunucu ${PORT} portunda çalışıyor.`);
 });
