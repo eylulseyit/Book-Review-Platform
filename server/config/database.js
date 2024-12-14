@@ -3,8 +3,8 @@
 const { Sequelize } = require('sequelize');
 
 // Veritabanı bağlantısını tanımlama
-const sequelize = new Sequelize('book_site', 'root', 'root', {
-    host: 'localhost',  // Eğer MySQL yerel makinede çalışıyorsa 'localhost' olmalı
+const sequelize = new Sequelize('book-site', 'root', 'root', {
+    host: '127.0.0.1',  // Eğer MySQL yerel makinede çalışıyorsa 'localhost' olmalı
     dialect: 'mysql',   // Kullanılan veritabanı türü
 });
 
