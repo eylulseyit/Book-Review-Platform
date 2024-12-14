@@ -26,7 +26,7 @@ const testRoute = require("./testRouter");
 // Example:
 router.use("/test", testRoute);
 
-const bookRoutes = require("./bookRoutes");
+const bookRoutes = require("./bookroutes");
 const userRoutes = require("./userRoutes");
 
 router.use("/books", bookRoutes);

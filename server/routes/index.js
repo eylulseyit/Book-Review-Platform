@@ -4,7 +4,7 @@ const UserController = require('../controllers/UserController');
 
 // Anasayfa rotası
 router.get('/', (req, res) => {
-  res.send('API is working');
+    res.send('API is working');
 });
 
 // Kullanıcılar ile ilgili rotalar
