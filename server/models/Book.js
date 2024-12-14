@@ -8,19 +8,19 @@ const Book = sequelize.define('Book', {
         primaryKey: true
     },
     title: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.STRING,
         allowNull: false
     },
     author: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.STRING,
         allowNull: false
     },
     genre: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING,
         allowNull: true
     },
     isbn: {
-        type: DataTypes.STRING(13),
+        type: DataTypes.STRING,
         allowNull: true
     },
     description: {

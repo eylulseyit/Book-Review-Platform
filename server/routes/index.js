@@ -1,20 +1,13 @@
-
-
-
 const express = require('express');
 const router = express.Router();
-const UserController = require('../controllers/UserController');
+//add all other routes here for usage
+const bookRoutes = require('./api/bookRoutes'); // Adjust path to `bookRoutes.js`
 
-// Anasayfa rotası
-router.get('/', (req, res) => {
-    res.send('API is working');
-});
+// Mount book routes at `/books`
+router.use('/books', bookRoutes);
 
-// Kullanıcılar ile ilgili rotalar
-router.post('/users', UserController.createUser);  // Yeni kullanıcı eklemek
-router.get('/users', UserController.getAllUsers);  // Tüm kullanıcıları listelemek
-router.get('/users/:id', UserController.getUserById);  // Bir kullanıcıyı id ile getirmek
-router.put('/users/:id', UserController.updateUser);  // Kullanıcıyı güncellemek
-router.delete('/users/:id', UserController.deleteUser);  // Kullanıcıyı silmek
+// Add any other routers here if needed
+// e.g., router.use('/users', userRoutes);
+//for now, I just added books for the explore the connection between this scripts (yorumları okuyun o kadar yaziyom :(((
 
 module.exports = router;

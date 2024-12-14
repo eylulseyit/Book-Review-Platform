@@ -1,32 +1,27 @@
-const express = require("express");
-const db = require("../config/database");
+const express = require('express');
 const router = express.Router();
+const BookController = require('../../controllers/bookController');
 
-// Kitapları listele
-router.get("/", (req, res) => {
-    const query = "SELECT * FROM books"; // Veri tabanındaki tablo adı 'books'
-    db.query(query, (err, results) => {
-        if (err) {
-            console.error("MySQL Query Error:", err.message);
-            res.status(500).json({ error: "Database query failed" });
-        } else {
-            res.status(200).json(results);
-        }
-    });
+// Define book routes
+router.get('/', (req, res) => {
+    res.send('Books API is working');
 });
 
-// Yeni kitap ekle
-router.post("/", (req, res) => {
-    const { title, author } = req.body;
-    const query = "INSERT INTO books (title, author) VALUES (?, ?)";
-    db.query(query, [title, author], (err, result) => {
-        if (err) {
-            console.error("MySQL Insert Error:", err.message);
-            res.status(500).json({ error: "Failed to insert book" });
-        } else {
-            res.status(201).json({ message: "Book added successfully", id: result.insertId });
-        }
-    });
-});
+// Route to get all books
+router.get('/', BookController.getAllBooks);
+
+// Route to get a specific book by ID
+router.get('/:id', BookController.getBookById);
+
+// Route to create a new book
+router.post('/', BookController.createBook);
+
+// Route to update a specific book by ID
+router.put('/:id', BookController.updateBook);
+
+// Route to delete a specific book by ID
+router.delete('/:id', BookController.deleteBook);
+
+// Add more routes here
 
 module.exports = router;
