@@ -1,0 +1,42 @@
+/* src/App.css */
+.App {
+  text-align: center;
+}
+
+header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+}
+
+footer {
+  background-color: #282c34;
+  padding: 10px;
+  color: white;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.book-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+}
+
+.book-card {
+  background-color: #f4f4f4;
+  padding: 20px;
+  border-radius: 5px;
+  width: 200px;
+}
+
+.book-card h2 {
+  font-size: 1.2rem;
+}
+
+.book-card p {
+  font-size: 1rem;
+  color: #555;
+}
