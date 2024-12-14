@@ -1,5 +1,4 @@
 // server.js
-const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const app = express();
@@ -27,7 +26,7 @@ db.connect(err => {
 });
 
 // Kitapları listeleme API'si
-app.get('/api/books', (req, res) => {
+app.get('/api/book', (req, res) => {
     db.query('SELECT * FROM books', (err, results) => {
         if (err) {
             console.error('Kitaplar yüklenemedi:', err);
@@ -54,7 +53,7 @@ app.get('/api/user/:id', (req, res) => {
 });
 
 // Kitap ekleme API'si
-app.post('/api/books', (req, res) => {
+app.post('/api/book', (req, res) => {
     const { title, author, description } = req.body;
 
     // Verinin doğruluğunu kontrol et

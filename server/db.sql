@@ -164,4 +164,4 @@ INSERT INTO recommendation (user_ID, book_ID) VALUES
 (9, 10),
 (10, 1);
 
-SELECT * FROM user LIMIT 10;
+SELECT * FROM book LIMIT 10;

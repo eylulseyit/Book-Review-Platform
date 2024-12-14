@@ -1,5 +1,5 @@
 // testcontroller.js
-
+//client da bağlayacağımız bu 
 // Veritabanı model dosyalarını gereksinimlere dahil et
 const db = require('../models');  // Sequelize ile tanımladığınız modeller
 
@@ -123,3 +123,4 @@ module.exports = {
         }
     }
 };
+

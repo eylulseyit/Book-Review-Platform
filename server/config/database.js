@@ -1,3 +1,5 @@
+//genelde models için kullanılır,
+
 const { Sequelize } = require('sequelize');
 
 // Veritabanı bağlantısını tanımlama
