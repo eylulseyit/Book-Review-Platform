@@ -7,18 +7,18 @@ const { Sequelize } = require('sequelize');
 
 /* Special note: I learned that our old database name 'book-site' occurs some problems. The char '-' is problematic.
 A lot of problems solved when i changed my database name from mysql workbench to 'book_site' from 'book-site' */
-const sequelize = new Sequelize('book_site', 'root', 'Eylul3131.', {//third variable is the database password
+/*const sequelize = new Sequelize('book_site', 'root', 'Eylul3131.', {//third variable is the database password
     host: '127.0.0.1',  // You can make this localhost
+    dialect: 'mysql',   // database type
+});*/
+
+
+const sequelize = new Sequelize('book_site', 'root', 'root', {
+    host: 'localhost',  // You can make this localhost
     dialect: 'mysql',   // database type
 });
 
-/* //A TEMPLATE FOR U <3
-const sequelize = new Sequelize('database_name', 'user_name', 'your_password', {
-    host: '127.0.0.1',  // You can make this localhost
-    dialect: 'mysql',   // database type
-});
 
-*/
 
 // Veritabanına bağlanıp bağlanamadığını kontrol etme
 sequelize.authenticate()

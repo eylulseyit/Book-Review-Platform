@@ -1,26 +1,22 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './pages/home';
-import Profile from './pages/profile';
-import BookList from './pages/bookList';
-import Header from './components/header';
-import Footer from './components/footer';
-import './App.css';
+// src/App.js
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import BookList from "./pages/BookList";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
-function App() {
+const App = () => {
   return (
     <Router>
-      <div className="App">
-        <Header />
+      <Navbar />
+      <div className="content">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/books" element={<BookList />} />
+          <Route path="/" element={<BookList />} />
         </Routes>
-        <Footer />
       </div>
+      <Footer />
     </Router>
   );
-}
+};
 
 export default App;

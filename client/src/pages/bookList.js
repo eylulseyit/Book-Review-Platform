@@ -1,25 +1,47 @@
 // src/pages/BookList.js
-import React, { useState, useEffect } from 'react';
-import { getBooks } from '../services/api';
-import BookList from '../components/bookList';
+import React, { useEffect, useState } from 'react';
+import { fetchBooks } from '../services/api';  // API'den kitapları çeken fonksiyon
+import BookCard from '../components/BookCard';  // Kitap kartlarını gösteren bileşen
 
-const BookListPage = () => {
+const BookList = () => {
     const [books, setBooks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
     useEffect(() => {
-        const fetchBooks = async () => {
-            const data = await getBooks();
-            setBooks(data);
+        const getBooks = async () => {
+            try {
+                const fetchedBooks = await fetchBooks();  // API'den kitapları çekiyoruz
+                setBooks(fetchedBooks);  // Verileri state'e kaydediyoruz
+            } catch (err) {
+                setError('Kitaplar yüklenirken bir hata oluştu.');
+            } finally {
+                setLoading(false);  // Yüklenme tamamlandı
+            }
         };
-        fetchBooks();
+        getBooks();
     }, []);
 
+    if (loading) {
+        return <div>Yükleniyor...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
+
     return (
-        <div className="book-list-page">
-            <h1>Kitaplar</h1>
-            <BookList books={books} />
+        <div className="book-list">
+            <h1>Kitap Listesi</h1>
+            {books.length === 0 ? (
+                <p>Henüz kitap eklenmemiş.</p>
+            ) : (
+                books.map((book) => (
+                    <BookCard key={book.book_ID} book={book} />
+                ))
+            )}
         </div>
     );
 };
 
-export default BookListPage;
+export default BookList;
