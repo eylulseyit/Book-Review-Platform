@@ -2,10 +2,6 @@ const express = require('express');
 const router = express.Router();
 const BookController = require('../../controllers/bookController');
 
-// Define book routes
-router.get('/', (req, res) => {
-    res.send('Books API is working');
-});
 
 // Route to get all books
 router.get('/', BookController.getAllBooks);
