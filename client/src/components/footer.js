@@ -1,10 +1,10 @@
 // src/components/Footer.js
-import React from 'react';
+import React from "react";
 
 const Footer = () => {
     return (
-        <footer className="footer">
-            <p>&copy; 2024 Kitap Okuma Sayfası</p>
+        <footer>
+            <p>© 2024 Kitap Okuma Uygulaması</p>
         </footer>
     );
 };
