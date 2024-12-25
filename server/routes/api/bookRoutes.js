@@ -3,7 +3,6 @@ const router = express.Router();
 const BookController = require('../../controllers/bookController');
 
 
-
 // Route to get all books
 router.get('/', BookController.getAllBooks);
 
