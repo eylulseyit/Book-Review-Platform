@@ -1,4 +1,3 @@
-// src/components/Navbar.js
 import React from "react";
 import { Link } from "react-router-dom";
 import './Navbar.css'; // Stil dosyasını import ediyoruz
@@ -12,6 +11,7 @@ const Navbar = () => {
             <ul className="nav-links">
                 <li><Link to="/">Home</Link></li> {/* Home sayfasına link */}
                 <li><Link to="/books">Book List</Link></li> {/* Kitap listesi sayfasına link */}
+                <li><Link to="/profile">Profilim</Link></li> {/* Profilim sayfasına link */}
             </ul>
         </nav >
     );

@@ -4,6 +4,8 @@ import BookList from "./pages/BookList";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import BookDetails from './pages/BookDetails';
+import Profile from './pages/Profile'; // Profil sayfası bileşeni
 
 const App = () => {
   return (
@@ -13,6 +15,8 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/books" element={<BookList />} />
+          <Route path="/books/:id" element={<BookDetails />} />
+          <Route path="/profile" element={<Profile />} /> {/* Profil sayfasına yönlendirme */}
         </Routes>
       </div>
       <Footer />
