@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 //add all other routes here for usage
 const UserRoutes = require('./api/userRoutes');
-const BookRoutes = require('./api/bookRoutes'); // Adjust path to `bookRoutes.js`
+const bookRoutes = require('./api/bookRoutes'); // Adjust path to `bookRoutes.js`
 
 // Mount book routes at `/books`
-router.use('/books', BookRoutes);
+router.use('/books', bookRoutes);
 router.use('/user', UserRoutes);
 
 

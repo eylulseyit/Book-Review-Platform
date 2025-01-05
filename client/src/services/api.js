@@ -9,15 +9,15 @@ export const fetchBooks = async () => {
     return response.json();
 };
 
-// API fonksiyonu: Profil bilgilerini almak
+// Profil bilgilerini almak için API fonksiyonu
 export const fetchProfile = async () => {
     try {
-        const response = await fetch(`${BASE_URL}/profile`); // API endpointi
+        const response = await fetch(`${BASE_URL}/profile`); // Profil bilgisi için doğru API endpoint'i
         if (!response.ok) {
             throw new Error('Profil bilgileri alınırken bir hata oluştu');
         }
         const data = await response.json();
-        return data;
+        return data; // Profil verisini döndür
     } catch (error) {
         throw error;
     }
