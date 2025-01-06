@@ -16,7 +16,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/books" element={<BookList />} />
           <Route path="/books/:id" element={<BookDetails />} />
-          <Route path="/profile" element={<Profile />} /> {/* Profil sayfasına yönlendirme */}
+          <Route path="/user" element={<Profile />} /> {/* Profil sayfasına yönlendirme */}
         </Routes>
       </div>
       <Footer />
