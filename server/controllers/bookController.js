@@ -2,10 +2,10 @@ const Book = require('../models/Book'); // Import the Book model
 //and there, all functions about books or requires book data
 module.exports = {
     // Fetch all books
-    getAllBooks: async (req, res) => {
+    getAllBooks: async (req,res) => {
         try {
-            const books = await Book.findAll(); // Sequelize function to get all records
-            res.status(200).json(books);
+            const book = await Book.findAll(); // Sequelize function to get all records
+            res.status(200).json(book);
         } catch (error) {
             res.status(500).json({ message: 'Error fetching books', error });
         }

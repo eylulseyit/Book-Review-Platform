@@ -17,7 +17,7 @@ const ReadingList = sequelize.define('ReadingList', {
     timestamps: false
 });
 
-// İlişkiyi tanımlıyoruz
+// Relationship
 ReadingList.belongsTo(User, { foreignKey: 'user_ID' });
 
 module.exports = ReadingList;

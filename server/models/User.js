@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');  // Veritabanı bağlantısı
+const sequelize = require('../config/database');
 
 const User = sequelize.define('User', {
     user_ID: {
@@ -17,7 +17,7 @@ const User = sequelize.define('User', {
         allowNull: false,
         unique: true
     },
-    password: {
+    password_hashed: {
         type: DataTypes.STRING,
         allowNull: false
     },
@@ -27,7 +27,14 @@ const User = sequelize.define('User', {
     }
 }, {
     tableName: 'user',
-    timestamps: false  // Otomatik olarak timestamp eklemeyi engeller
+    timestamps: false
+});
+
+User.beforeCreate(async (user) => {
+    if (user.password) {
+        user.password_hashed = await bcrypt.hash(user.password, 10);
+        user.password = undefined; // Make sure the plaintext password is not stored
+    }
 });
 
 module.exports = User;

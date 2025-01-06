@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const readingList = require('./reading_list');
-const book = require('./Book');
+const ReadingList = require('./ReadingList');  // Corrected name
+const Book = require('./Book');
 
 const BookInList = sequelize.define('BookInList', {
     progress: {
@@ -22,7 +22,7 @@ const BookInList = sequelize.define('BookInList', {
     primaryKey: false
 });
 
-// İlişkileri tanımlıyoruz
+// Relationships
 BookInList.belongsTo(ReadingList, { foreignKey: 'list_ID' });
 BookInList.belongsTo(Book, { foreignKey: 'book_ID' });
 

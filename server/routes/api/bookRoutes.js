@@ -4,7 +4,7 @@ const BookController = require('../../controllers/bookController');
 
 
 // Route to get all books
-router.get('/', BookController.getAllBooks);
+router.get('/all', BookController.getAllBooks);
 
 // Route to get a specific book by ID
 router.get('/:id', BookController.getBookById);

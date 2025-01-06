@@ -15,7 +15,7 @@ app.use(cors());
 app.use('/api', routes);
 
 // Veritabanı senkronizasyonu
-sequelize.sync()
+sequelize.sync({ force: false })
   .then(() => {
     console.log('Veritabanı başarıyla senkronize edildi.');
   })
