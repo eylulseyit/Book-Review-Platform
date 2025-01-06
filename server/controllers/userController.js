@@ -1,21 +1,39 @@
 const User = require('../models/User'); // Import the Book model
 
-
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 // Register user
 const register = async (req, res) => {
     const { username, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-  
+
     try {
-      const user = await User.create({ username, email, password: hashedPassword });
-      res.status(201).json({ message: 'User registered successfully.', user });
+        // Check if the user already exists based on the email
+        const existingUser = await User.findOne({ where: { email } });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Email is already in use.' });
+        }
+
+
+        // Create new user
+        const user = await User.create({ 
+            username, 
+            email, 
+            password: password
+        });
+
+        // Generate JWT token (using a simple secret key for now)
+        const token = jwt.sign({ id: user.id, is_employee: false }, 'your-secret-key', { expiresIn: '1h' });
+
+        // Respond with success message and token
+        res.status(201).json({ message: 'User registered successfully.', token });
     } catch (error) {
-      res.status(500).json({ error: 'User registration failed.' });
+        // Log and return a server error
+        console.error('Registration error:', error);
+        res.status(500).json({ error: 'User registration failed.', details: error.message });
     }
-  };
+};
+
   
   // User login
 const login = async (req, res) => {
