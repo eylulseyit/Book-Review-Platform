@@ -7,7 +7,7 @@ const BookInList = require('../models/BookInList');
 
 
 module.exports = {
-    getAllUsers: async (req, res) => { 
+    getAllUsers: async (req, res) => {
         try {
             const users = await User.findAll(); // Sequelize function to get all records
             res.status(200).json(users);
@@ -18,10 +18,11 @@ module.exports = {
 
     getUserProfile: async (req, res) => {
         const token = req.headers.authorization.split(' ')[1];
-        
+
         try {
             const decoded = jwt.verify(token, 'your-secret-key');
             const user = await User.findByPk(decoded.id);
+            console.log(decoded.id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
@@ -43,8 +44,8 @@ module.exports = {
             user.username = username || user.username;
             user.email = email || user.email;
             if (password) {
-            user.password_hashed = await bcrypt.hash(password, 10); // Assuming password_hashed is correct
-        }
+                user.password_hashed = await bcrypt.hash(password, 10); // Assuming password_hashed is correct
+            }
             await user.save();
             res.status(200).json(user);
         } catch (error) {

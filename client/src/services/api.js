@@ -17,7 +17,9 @@ export const fetchProfile = async () => {
             throw new Error("Token bulunamadı, giriş yapmanız gerek.");
         }
 
-        const response = await fetch(`${BASE_URL}/auth/profile`, { // Profil endpoint'ini kullan
+        console.log(token);
+
+        const response = await fetch(`${BASE_URL}/user/getUserProfile`, { // Profil endpoint'ini kullan
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`, // Token'ı Authorization başlığına ekle
@@ -25,11 +27,14 @@ export const fetchProfile = async () => {
             },
         });
 
+
         if (!response.ok) {
             throw new Error("Profil bilgileri alınamadı.");
         }
 
         const data = await response.json();
+
+        console.log(data.bio);
         return data; // Profil verisini döndür
     } catch (error) {
         throw error; // Hata durumunda mesajı fırlat

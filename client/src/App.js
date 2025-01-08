@@ -11,13 +11,13 @@ import Login from './pages/Login';
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Kullanıcı durumu kontrolü (localStorage'dan veya başka bir kaynaktan kontrol edebilirsiniz)
+  // Kullanıcı giriş durumu kontrolü (localStorage'dan token'ı kontrol et)
   useEffect(() => {
-    const user = localStorage.getItem('user'); // Veya başka bir yöntemle giriş durumunu kontrol edebilirsiniz.
-    if (user) {
-      setIsLoggedIn(true); // Eğer user varsa giriş yapılmış demektir
+    const token = localStorage.getItem('token'); // Token'ı kontrol et
+    if (token) {
+      setIsLoggedIn(true); // Token varsa kullanıcı giriş yapmış demektir
     } else {
-      setIsLoggedIn(false); // Kullanıcı giriş yapmamış
+      setIsLoggedIn(false); // Token yoksa kullanıcı giriş yapmamış
     }
   }, []);
 
@@ -32,7 +32,7 @@ const App = () => {
 
           {/* Kullanıcı login değilse login sayfasına yönlendir */}
           <Route
-            path="/user"
+            path="/profile"
             element={isLoggedIn ? <Profile /> : <Navigate to="/login" />}
           />
 
