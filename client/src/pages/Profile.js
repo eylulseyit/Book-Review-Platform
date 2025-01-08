@@ -1,70 +1,59 @@
-import React, { useEffect, useState } from 'react';
-import { fetchProfile, fetchProfileBooks, addBookToProfile } from '../services/api'; // API fonksiyonları
+import React, { useEffect, useState } from "react";
+import { fetchProfile, fetchProfileBooks } from "../services/api";
 
 const Profile = () => {
-    const [profile, setProfile] = useState(null); // Profil bilgilerini tutuyoruz
-    const [profileBooks, setProfileBooks] = useState([]); // Profil kitaplarını tutuyoruz
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
+    const [profile, setProfile] = useState(null);
+    const [profileBooks, setProfileBooks] = useState([]);
 
     useEffect(() => {
         const getProfileData = async () => {
             try {
-                const profileData = await fetchProfile(); // Profil bilgilerini alıyoruz
-                const books = await fetchProfileBooks(); // Profildeki kitapları alıyoruz
-                setProfile(profileData);
-                setProfileBooks(books);
-            } catch (err) {
-                setError('Profil bilgileri veya kitaplar yüklenirken bir hata oluştu.');
-            } finally {
-                setLoading(false);
+                const profileData = await fetchProfile();
+                setProfile(profileData); // Profil bilgilerini set et
+            } catch (error) {
+                console.error("Profil bilgileri alınamadı:", error);
             }
         };
+
+        const getProfileBooks = async () => {
+            try {
+                const booksData = await fetchProfileBooks();
+                setProfileBooks(booksData); // Profildeki kitapları set et
+            } catch (error) {
+                console.error("Profil kitapları alınamadı:", error);
+            }
+        };
+
         getProfileData();
+        getProfileBooks();
     }, []);
-
-    const handleAddBook = async (bookId) => {
-        try {
-            await addBookToProfile(bookId); // Kitap profilimize ekleniyor
-            setProfileBooks((prevBooks) => [...prevBooks, { bookId }]); // Profil kitaplarını güncelliyoruz
-            alert('Kitap profilinize eklendi!');
-        } catch (err) {
-            alert('Kitap eklenirken bir hata oluştu.');
-        }
-    };
-
-    if (loading) {
-        return <div>Yükleniyor...</div>;
-    }
-
-    if (error) {
-        return <div>{error}</div>;
-    }
 
     return (
         <div>
-            <h1>Profilim</h1>
-
-            {profile && (
+            {profile ? (
                 <div>
-                    <h3>{profile.username}</h3>
-                    <p>{profile.bio}</p> {/* Kullanıcı biyografisini gösteriyoruz */}
+                    <h2>{profile.username}'s Profile</h2>
+                    <p>{profile.bio}</p>
+
+                    <h3>Books in Profile</h3>
+                    <ul>
+                        {profileBooks.length > 0 ? (
+                            profileBooks.map((book, index) => (
+                                <li key={index}>
+                                    <h4>{book.title}</h4>
+                                    <p>{book.author}</p>
+                                    <p>{book.description}</p>
+                                    {/* Kitap hakkında yorumlar ve diğer bilgileri buraya ekleyebilirsiniz */}
+                                </li>
+                            ))
+                        ) : (
+                            <p>No books found in your profile</p>
+                        )}
+                    </ul>
                 </div>
+            ) : (
+                <p>Loading profile...</p>
             )}
-
-            <h3>Profilime Eklediğim Kitaplar</h3>
-
-            <div>
-                {profileBooks.length === 0 ? (
-                    <p>Henüz profilinize eklediğiniz kitap yok.</p>
-                ) : (
-                    profileBooks.map((book, index) => (
-                        <div key={index} className="profile-book">
-                            <p>{book.title}</p>
-                        </div>
-                    ))
-                )}
-            </div>
         </div>
     );
 };

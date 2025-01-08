@@ -2,7 +2,7 @@
 const BASE_URL = 'http://localhost:5000/api';
 
 export const fetchBooks = async () => {
-    const response = await fetch(`${BASE_URL}/books`);
+    const response = await fetch(`${BASE_URL}/books/all`);
     if (!response.ok) {
         throw new Error('Kitaplar alınamadı');
     }
@@ -12,7 +12,7 @@ export const fetchBooks = async () => {
 // Profil bilgilerini almak için API fonksiyonu
 export const fetchProfile = async () => {
     try {
-        const response = await fetch(`${BASE_URL}/profile`); // Profil bilgisi için doğru API endpoint'i
+        const response = await fetch(`${BASE_URL}/profile/all`); // Profil bilgisi için doğru API endpoint'i
         if (!response.ok) {
             throw new Error('Profil bilgileri alınırken bir hata oluştu');
         }

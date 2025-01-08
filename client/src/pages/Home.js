@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchBooks } from '../services/api'; // Kitapları API'den çeken fonksiyon
 import { useNavigate } from 'react-router-dom'; // Kitap detayına yönlendirme için
-
+import './Home.css';
 const Home = () => {
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);

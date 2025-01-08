@@ -1,19 +1,47 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import './Navbar.css'; // Stil dosyasını import ediyoruz
+// src/components/Navbar.js
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import './Navbar.css';
 
 const Navbar = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    useEffect(() => {
+        const user = localStorage.getItem('user'); // Veya başka bir yöntemle giriş durumunu kontrol edebilirsiniz.
+        if (user) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+    }, []);
+
     return (
         <nav className="navbar">
             <div className="logo">
-                <h1>My Book Site</h1>
+                <h1>Kitap Platformu</h1>
             </div>
             <ul className="nav-links">
-                <li><Link to="/">Home</Link></li> {/* Home sayfasına link */}
-                <li><Link to="/books">Book List</Link></li> {/* Kitap listesi sayfasına link */}
-                <li><Link to="/profile">Profilim</Link></li> {/* Profilim sayfasına link */}
+                <li>
+                    <Link to="/">Home</Link>
+                </li>
+                <li>
+                    <Link to="/books">Books</Link>
+                </li>
+                <li>
+                    <Link to="/books/1">Book Details</Link>
+                </li>
+                {/* Giriş yapmış kullanıcı için Profile bağlantısı */}
+                {isLoggedIn ? (
+                    <li>
+                        <Link to="/user" className="profile">Profile</Link>
+                    </li>
+                ) : (
+                    <li>
+                        <Link to="/login" className="login">Login</Link>
+                    </li>
+                )}
             </ul>
-        </nav >
+        </nav>
     );
 };
 
