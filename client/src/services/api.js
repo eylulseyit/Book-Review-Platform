@@ -12,14 +12,27 @@ export const fetchBooks = async () => {
 // Profil bilgilerini almak için API fonksiyonu
 export const fetchProfile = async () => {
     try {
-        const response = await fetch(`${BASE_URL}/user`); // Profil bilgisi için doğru API endpoint'i
-        if (!response.ok) {
-            throw new Error('Profil bilgileri alınırken bir hata oluştu');
+        const token = localStorage.getItem("token"); // localStorage'dan token al
+        if (!token) {
+            throw new Error("Token bulunamadı, giriş yapmanız gerek.");
         }
+
+        const response = await fetch(`${BASE_URL}/auth/profile`, { // Profil endpoint'ini kullan
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`, // Token'ı Authorization başlığına ekle
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error("Profil bilgileri alınamadı.");
+        }
+
         const data = await response.json();
         return data; // Profil verisini döndür
     } catch (error) {
-        throw error;
+        throw error; // Hata durumunda mesajı fırlat
     }
 };
 
