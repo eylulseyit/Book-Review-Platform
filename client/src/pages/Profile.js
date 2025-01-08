@@ -8,11 +8,13 @@ const Profile = () => {
         const fetchUserProfile = async () => {
             try {
                 const token = localStorage.getItem("token"); // localStorage'dan token al
-                if (!token) {
+                const userId = localStorage.getItem("userId"); // Kullanıcı ID'sini localStorage'dan al
+
+                if (!token || !userId) {
                     throw new Error("Kullanıcı girişi yapılmamış.");
                 }
 
-                const response = await fetch("http://localhost:5000/api/profile", {
+                const response = await fetch(`http://localhost:5000/api/profile/${userId}`, {
                     method: "GET",
                     headers: {
                         Authorization: `Bearer ${token}`, // Token'i Authorization başlığına ekle
