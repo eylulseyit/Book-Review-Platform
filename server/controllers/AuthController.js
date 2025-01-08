@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken'); // Import jsonwebtoken for generating token
 
 module.exports = {
     // User registration
+
+    
     register: async (req, res) => {
         const { username, email, password, bio } = req.body;
 
@@ -44,16 +46,16 @@ module.exports = {
         try {
             const user = await User.findOne({ where: { email } });
             if (!user) return res.status(404).json({ error: 'User not found.' });
-            console.log(user.email);
             // Compare the plain text password with the hashed one in 'password_hashed'
             const isMatch = await bcrypt.compare(password, user.password_hashed);
-            console.log(password);
-            console.log(user.password_hashed);
             if (!isMatch) return res.status(401).json({ error: 'Invalid crdddddedentials.' });
 
             // Generate token
             const token = jwt.sign({ id: user.user_ID, email: user.email }, 'your-secret-key', { expiresIn: '1h' });
-            res.json({ message: 'Login successful.', token });
+            res.json({ 
+                message: 'Login successful.', 
+                token,
+            });
         } catch (error) {
             console.error('Login error:', error);
             res.status(500).json({ error: 'Login failed.', details: error.message });
