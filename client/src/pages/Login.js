@@ -16,9 +16,8 @@ const Login = () => {
             // loginUser API çağrısını kullanarak giriş işlemi
             const response = await loginUser({ email, password });
 
-            // Giriş başarılıysa token'ı ve kullanıcı ID'sini localStorage'a kaydet
+            // Giriş başarılıysa sadece token'ı localStorage'a kaydet
             localStorage.setItem("token", response.token);
-            localStorage.setItem("userId", response.userId); // User ID'yi de kaydediyoruz
 
             // Kullanıcıyı profil sayfasına yönlendir
             navigate("/profile");
