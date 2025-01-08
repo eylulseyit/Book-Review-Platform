@@ -22,7 +22,7 @@ const User = sequelize.define('User', {
         allowNull: false
     },
     bio: {
-        type: DataTypes.TEXT,
+        type: DataTypes.STRING,
         allowNull: true
     }
 }, {
