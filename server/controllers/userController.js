@@ -17,7 +17,22 @@ module.exports = {
     },
 
     getUserProfile: async (req, res) => {
-        const { id } = req.params;
+        const token = req.headers.authorization.split(' ')[1];
+        
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const user = await User.findByPk(decoded.id);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+            res.status(200).json(user);
+        } catch (error) {
+            res.status(500).json({ message: 'Error fetching user', error });
+        }
+    },
+    
+    getUserProfile: async (req, res) => {
+        const { id } = req.body.token;
         
         try {
 
@@ -107,10 +122,10 @@ module.exports = {
     createReadingListForUser: async (req, res) => {
         try {
             const { listname } = req.body;
-            const userId = req.params.userId;
+            const userId = req.params.id;
 
             const newList = await ReadingList.create({
-                listname,
+                listname: listname,
                 user_ID: userId
             });
 
