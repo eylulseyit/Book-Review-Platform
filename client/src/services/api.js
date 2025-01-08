@@ -12,7 +12,7 @@ export const fetchBooks = async () => {
 // Profil bilgilerini almak için API fonksiyonu
 export const fetchProfile = async () => {
     try {
-        const response = await fetch(`${BASE_URL}/profile/all`); // Profil bilgisi için doğru API endpoint'i
+        const response = await fetch(`${BASE_URL}/user`); // Profil bilgisi için doğru API endpoint'i
         if (!response.ok) {
             throw new Error('Profil bilgileri alınırken bir hata oluştu');
         }
@@ -26,7 +26,7 @@ export const fetchProfile = async () => {
 
 // Profildeki kitapları almak için
 export const fetchProfileBooks = async () => {
-    const response = await fetch('/api/profile');
+    const response = await fetch('/api/user');
     if (!response.ok) {
         throw new Error('Profil kitapları alınırken bir hata oluştu.');
     }
@@ -46,4 +46,22 @@ export const addBookToProfile = async (bookId) => {
     if (!response.ok) {
         throw new Error('Kitap profilinize eklenemedi');
     }
+};
+
+// Kullanıcı giriş işlemi
+export const loginUser = async ({ email, password }) => {
+    const response = await fetch(`${BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Giriş başarısız.");
+    }
+
+    return response.json(); // Token'ı döndürür
 };

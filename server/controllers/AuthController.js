@@ -44,10 +44,12 @@ module.exports = {
         try {
             const user = await User.findOne({ where: { email } });
             if (!user) return res.status(404).json({ error: 'User not found.' });
-
+            console.log(user.email);
             // Compare the plain text password with the hashed one in 'password_hashed'
             const isMatch = await bcrypt.compare(password, user.password_hashed);
-            if (!isMatch) return res.status(401).json({ error: 'Invalid credentials.' });
+            console.log(password);
+            console.log(user.password_hashed);
+            if (!isMatch) return res.status(401).json({ error: 'Invalid crdddddedentials.' });
 
             // Generate token
             const token = jwt.sign({ id: user.user_ID, email: user.email }, 'your-secret-key', { expiresIn: '1h' });
