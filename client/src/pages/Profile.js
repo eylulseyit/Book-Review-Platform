@@ -1,47 +1,29 @@
 import React, { useEffect, useState } from "react";
+import { fetchProfile } from "../services/api"; // API dosyasından getProfile fonksiyonunu içe aktar
 
 const Profile = () => {
-    const [user, setUser] = useState(null); // Kullanıcı bilgilerini saklamak için state
-    const [error, setError] = useState(""); // Hataları saklamak için state
+    const [user, setUser] = useState(null);
+    const [error, setError] = useState("");
 
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const token = localStorage.getItem("token"); // localStorage'dan token al
-                const userId = localStorage.getItem("userId"); // Kullanıcı ID'sini localStorage'dan al
-
-                if (!token || !userId) {
-                    throw new Error("Kullanıcı girişi yapılmamış.");
-                }
-
-                const response = await fetch(`http://localhost:5000/api/profile/${userId}`, {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`, // Token'i Authorization başlığına ekle
-                        "Content-Type": "application/json",
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error("Profil bilgileri alınamadı.");
-                }
-
-                const data = await response.json();
-                setUser(data); // Kullanıcı bilgilerini state'e kaydet
+                const data = await fetchProfile(); // API'den kullanıcı bilgilerini al
+                setUser(data); // Kullanıcıyı state'e kaydet
             } catch (err) {
-                setError(err.message); // Hata mesajını kaydet
+                setError(err.message); // Hata varsa göster
             }
         };
 
         fetchUserProfile();
-    }, []); // Bileşen yüklendiğinde bir kez çalışır
+    }, []); // Sayfa yüklendiğinde bir kez çalışacak
 
     if (error) {
-        return <p style={{ color: "red" }}>{error}</p>; // Hata varsa göster
+        return <p style={{ color: "red" }}>{error}</p>;
     }
 
     if (!user) {
-        return <p>Profil yükleniyor...</p>; // Kullanıcı bilgileri yüklenirken
+        return <p>Profil yükleniyor...</p>;
     }
 
     return (
@@ -49,7 +31,7 @@ const Profile = () => {
             <h1>Profil Bilgileri</h1>
             <p><strong>Ad:</strong> {user.username}</p>
             <p><strong>Email:</strong> {user.email}</p>
-            {user.bio && <p><strong>Biyografi:</strong> {user.bio}</p>} {/* Biyografi varsa göster */}
+            {user.bio && <p><strong>Biyografi:</strong> {user.bio}</p>}
         </div>
     );
 };
