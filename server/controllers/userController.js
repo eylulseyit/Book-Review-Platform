@@ -20,7 +20,7 @@ module.exports = {
         const token = req.headers.authorization.split(' ')[1];
         
         try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            const decoded = jwt.verify(token, 'your-secret-key');
             const user = await User.findByPk(decoded.id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
@@ -30,7 +30,7 @@ module.exports = {
             res.status(500).json({ message: 'Error fetching user', error });
         }
     },
-    
+
     getUserProfile: async (req, res) => {
         const { id } = req.body.token;
         
