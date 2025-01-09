@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../services/api"; // API fonksiyonunu ekliyoruz
+import { loginUser } from "../services/api";
 
-const Login = () => {
+const Login = ({ setIsLoggedIn }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(""); // Hata mesajlarını göstermek için
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -13,16 +13,11 @@ const Login = () => {
         setError(""); // Önceki hataları temizle
 
         try {
-            // loginUser API çağrısını kullanarak giriş işlemi
-            const response = await loginUser({ email, password });
-
-            // Giriş başarılıysa sadece token'ı localStorage'a kaydet
-            localStorage.setItem("token", response.token);
-
-            // Kullanıcıyı profil sayfasına yönlendir
-            navigate("/profile");
+            const response = await loginUser({ email, password }); // API çağrısı
+            localStorage.setItem("token", response.token); // Token'ı kaydet
+            setIsLoggedIn(true); // Kullanıcı durumunu güncelle
+            navigate("/profile"); // Profile sayfasına yönlendir
         } catch (err) {
-            // Hata durumunda mesajı ayarla
             setError(err.message || "Giriş sırasında bir hata oluştu.");
         }
     };

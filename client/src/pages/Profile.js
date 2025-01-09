@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { fetchProfile } from "../services/api"; // API dosyasından getProfile fonksiyonunu içe aktar
+import { fetchProfile } from "../services/api";
 
-const Profile = () => {
+const Profile = ({ handleLogout }) => {
     const [user, setUser] = useState(null);
     const [error, setError] = useState("");
 
@@ -16,7 +16,7 @@ const Profile = () => {
         };
 
         fetchUserProfile();
-    }, []); // Sayfa yüklendiğinde bir kez çalışacak
+    }, []);
 
     if (error) {
         return <p style={{ color: "red" }}>{error}</p>;
@@ -32,6 +32,21 @@ const Profile = () => {
             <p><strong>Ad:</strong> {user.username}</p>
             <p><strong>Email:</strong> {user.email}</p>
             {user.bio && <p><strong>Biyografi:</strong> {user.bio}</p>}
+
+            {/* Çıkış Yap Butonu */}
+            <button
+                onClick={handleLogout}
+                style={{
+                    marginTop: "20px",
+                    padding: "10px 20px",
+                    backgroundColor: "red",
+                    color: "white",
+                    border: "none",
+                    cursor: "pointer",
+                }}
+            >
+                LogOut
+            </button>
         </div>
     );
 };

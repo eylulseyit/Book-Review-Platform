@@ -4,22 +4,26 @@ import BookList from "./pages/BookList";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
-import BookDetails from './pages/BookDetails';
-import Profile from './pages/Profile';
-import Login from './pages/Login';
+import BookDetails from "./pages/BookDetails";
+import Profile from "./pages/Profile";
+import Login from "./pages/Login";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Kullanıcı giriş durumu kontrolü (localStorage'dan token'ı kontrol et)
   useEffect(() => {
-    const token = localStorage.getItem('token'); // Token'ı kontrol et
+    const token = localStorage.getItem("token"); // Token kontrolü
     if (token) {
-      setIsLoggedIn(true); // Token varsa kullanıcı giriş yapmış demektir
+      setIsLoggedIn(true);
     } else {
-      setIsLoggedIn(false); // Token yoksa kullanıcı giriş yapmamış
+      setIsLoggedIn(false);
     }
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Token sil
+    setIsLoggedIn(false); // Kullanıcı durumunu sıfırla
+  };
 
   return (
     <Router>
@@ -29,14 +33,20 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/books" element={<BookList />} />
           <Route path="/books/:id" element={<BookDetails />} />
-
-          {/* Kullanıcı login değilse login sayfasına yönlendir */}
           <Route
             path="/profile"
-            element={isLoggedIn ? <Profile /> : <Navigate to="/login" />}
+            element={
+              isLoggedIn ? (
+                <Profile handleLogout={handleLogout} />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
           />
-
-          <Route path="/login" element={<Login />} />
+          <Route
+            path="/login"
+            element={<Login setIsLoggedIn={setIsLoggedIn} />}
+          />
         </Routes>
       </div>
       <Footer />
