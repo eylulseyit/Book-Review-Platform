@@ -205,7 +205,7 @@ module.exports = {
     // Function to add a book to a user's reading list
     addBookToReadingList: async (req, res) => {
         try {
-            const { list_ID, book_ID, progress } = req.body;
+            const { list_ID, book_ID } = req.body;
 
             // Ensure the reading list and book exist
             const readingList = await ReadingList.findByPk(list_ID);
@@ -218,7 +218,6 @@ module.exports = {
             const newBookInList = await BookInList.create({
                 list_ID,
                 book_ID,
-                progress
             });
 
             res.status(201).json(newBookInList);
