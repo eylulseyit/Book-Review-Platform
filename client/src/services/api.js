@@ -29,7 +29,7 @@ export const fetchProfile = async () => {
 
 
         if (!response.ok) {
-            throw new Error("Profil bilgileri alınamadı.");
+            throw new Error("Profil bilgileri alınnnnnamadı.");
         }
 
         const data = await response.json();

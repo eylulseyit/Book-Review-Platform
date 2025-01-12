@@ -8,13 +8,6 @@ const Login = ({ setIsLoggedIn }) => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    // useEffect ile token kontrolü yapıyoruz
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            navigate("/profile"); // Eğer kullanıcı zaten giriş yapmışsa direkt profile sayfasına yönlendir
-        }
-    }, [navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
