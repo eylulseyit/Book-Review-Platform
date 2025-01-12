@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api";
 
@@ -7,6 +7,14 @@ const Login = ({ setIsLoggedIn }) => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
+
+    // useEffect ile token kontrolü yapıyoruz
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            navigate("/profile"); // Eğer kullanıcı zaten giriş yapmışsa direkt profile sayfasına yönlendir
+        }
+    }, [navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();

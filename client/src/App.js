@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import BookList from "./pages/BookList";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
+import BookList from "./pages/BookList";
 import BookDetails from "./pages/BookDetails";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
@@ -14,9 +14,7 @@ const App = () => {
   useEffect(() => {
     const token = localStorage.getItem("token"); // Token kontrolü
     if (token) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
+      setIsLoggedIn(true); // Token varsa kullanıcı giriş yapmış demektir
     }
   }, []);
 
@@ -45,7 +43,7 @@ const App = () => {
           />
           <Route
             path="/login"
-            element={<Login setIsLoggedIn={setIsLoggedIn} />}
+            element={isLoggedIn ? <Navigate to="/profile" /> : <Login setIsLoggedIn={setIsLoggedIn} />}
           />
         </Routes>
       </div>
