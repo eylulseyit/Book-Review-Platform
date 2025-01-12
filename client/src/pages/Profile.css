@@ -1,0 +1,163 @@
+/* Genel Sayfa Ayarları */
+.profile-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f5;
+    padding: 30px;
+    margin: 30px auto;
+    max-width: 1000px;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    background-image: linear-gradient(145deg, #ffffff, #e6e6f1);
+}
+
+/* Başlık Stili */
+.profile-container h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Profil Bilgileri Stili */
+.profile-info {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.profile-info p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.profile-info strong {
+    color: #5e5e5e;
+}
+
+/* Biyografi Alanı */
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #f7f7f7;
+    font-size: 1rem;
+    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+/* Form Butonları */
+button {
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button[type="button"] {
+    background-color: #f44336;
+}
+
+button[type="button"]:hover {
+    background-color: #d32f2f;
+}
+
+/* Form Başlıkları */
+form h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+/* Giriş Alanları (input) */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background-color: #f7f7f7;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: #333;
+}
+
+input[type="password"] {
+    margin-bottom: 30px;
+}
+
+input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+/* Hata Mesajı */
+.error-message {
+    color: red;
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* Profil Sayfası Genel Mesajlar */
+.loading-message {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+/* Responsive tasarım */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 20px;
+        margin: 20px;
+    }
+
+    .profile-info,
+    form {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    textarea {
+        width: 100%;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+    }
+}

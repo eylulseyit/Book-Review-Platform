@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchProfile, updateUser, updateBio } from "../services/api";
+import './Profile.css'; // CSS dosyasının yolu
+
 
 const Profile = ({ handleLogout }) => {
     const [user, setUser] = useState(null);
