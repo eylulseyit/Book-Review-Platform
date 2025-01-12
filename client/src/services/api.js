@@ -91,23 +91,6 @@ export const registerUser = async ({ username, email, password, bio }) => {
 };
 
 
-// Kategorileri API'den çekmek için
-export const fetchCategories = async () => {
-    const response = await fetch(`${BASE_URL}/books/getAllCategories`);
-    if (!response.ok) {
-        throw new Error('Kategoriler alınamadı');
-    }
-    return response.json();
-};
-
-// Belirli bir kategorideki kitapları çekmek için
-export const fetchBooksByCategory = async (categoryId) => {
-    const response = await fetch(`${BASE_URL}/books/getBookByCategory/${categoryId}`);
-    if (!response.ok) {
-        throw new Error('Kitaplar alınamadı');
-    }
-    return response.json();
-};
 
 // Biyografi güncelleme
 export const updateBio = async ({ bio }) => {
@@ -152,5 +135,26 @@ export const updateUser = async ({ username, email, password }) => {
         throw new Error("Kullanıcı bilgileri güncellenemedi.");
     }
 
+    return response.json();
+};
+export const fetchCategories = async () => {
+    const response = await fetch(`${BASE_URL}/books/getAllGenres`); // API'nin yeni endpoint'ini kullanıyoruz.
+    if (!response.ok) {
+        throw new Error('Kategoriler alınamadı');
+    }
+    return response.json();
+};
+export const fetchBooksByCategory = async (genre) => {
+    const response = await fetch(`${BASE_URL}/books/getBookByGenre`, {  // Genre parametresi ile API çağırıyoruz
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ genre }), // Genre'yi API'ye gönderiyoruz
+    });
+
+    if (!response.ok) {
+        throw new Error('Kitaplar alınamadı');
+    }
     return response.json();
 };
