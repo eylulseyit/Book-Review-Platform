@@ -9,6 +9,8 @@ router.get('/all', BookController.getAllBooks);
 // Route to get a specific book by ID
 router.get('/:id', BookController.getBookById);
 
+router.post('/getAllGenres', BookController.getAllGenres);
+
 // Route to create a new book
 router.post('/', BookController.createBook);
 
@@ -18,10 +20,7 @@ router.put('/:id', BookController.updateBook);
 // Route to delete a specific book by ID
 router.delete('/:id', BookController.deleteBook);
 
-router.get('/getAllCategories', BookController.getAllCategories);
-
-router.get('/getBookByCategory', BookController.getBookByCategory);
-
+router.post('/getBookByGenre', BookController.getBookByGenre);
 // Add more routes here
 
 module.exports = router;

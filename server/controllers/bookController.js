@@ -1,8 +1,10 @@
+const { Sequelize } = require('sequelize'); // Import Sequelize from the Sequelize library
 const Book = require('../models/Book'); // Import the Book model
 //and there, all functions about books or requires book data
 module.exports = {
     // Fetch all books
     getAllBooks: async (req,res) => {
+        console.log('Fetching books...');
         try {
             const book = await Book.findAll(); // Sequelize function to get all records
             res.status(200).json(book);
@@ -48,7 +50,7 @@ module.exports = {
         const { id } = req.params;
         const { title, author, genre, isbn, description } = req.body;
         try {
-            const book = await Book.findOne({ where: { book_ID: id } });
+            const book = await Book.findOne({ where: { id } });
             if (!book) {
                 return res.status(404).json({ message: 'Book not found' });
             }
@@ -77,28 +79,10 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ message: 'Error deleting book', error });
         }
+
     },
 
-    getBookByCategory: async (req, res) => {
-        
-        const { category } = req.body;
-
-        if(!category){  // Check if category is not provided
-            return res.status(400).json({ message: 'Category is required' });
-        }
-        
-        try {
-            const book = await Book.findAll({ where: { genre: category } });
-            if (!book) {
-                return res.status(404).json({ message: 'Book not found' });
-            }
-            res.status(200).json(book);
-        } catch (error) {
-            res.status(500).json({ message: 'Error fetching book', error });
-        }
-    },
-
-    getAllCategories: async (req, res) => {
+    getAllGenres: async (req, res) => {
         try {
             const book = await Book.findAll({ attributes: ['genre'] });
             if (!book) {
@@ -108,5 +92,24 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ message: 'Error fetching book', error });
         }
-    }
+    },
+
+    getBookByGenre: async (req, res) => {
+        
+        const { genre } = req.body;
+
+        if(!genre){  // Check if category is not provided
+            return res.status(400).json({ message: 'Genre is required' });
+        }
+
+        try {
+            const book = await Book.findAll({ where: { genre: genre } });
+            if (!book) {
+                return res.status(404).json({ message: 'Book not found' });
+            }
+            res.status(200).json(book);
+        } catch (error) {
+            res.status(500).json({ message: 'Error fetching book', error });
+        }
+    },
 };
