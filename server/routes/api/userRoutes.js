@@ -10,17 +10,17 @@ router.get('/', UserController.getAllUsers);//GET ALL USERS
 
 router.get('/getUserProfile', UserController.getUserProfile);//GET USER PROFILE
 
-router.put('/:id', UserController.updateUser);//UPDATE USER (username, email, password, send all of them as json
+router.put('/update-user', UserController.updateUser);//UPDATE USER (username, email, password, send all of them as json
 
-router.put('/:id/update-bio', UserController.updateBio);
+router.put('/update-bio', UserController.updateBio);
 
-router.delete('/:id', UserController.deleteUser);
+router.delete('/delete-user', UserController.deleteUser);
 
-router.post('/:id/create-booklist', UserController.createReadingListForUser);
+//router.post('/create-booklist', UserController.createReadingListForUser);
 
-router.get('/:id/booklists', UserController.getUserReadingLists);
+router.get('/booklists', UserController.getUserReadingLists);
 
-router.get('/:id/booklist/:list_id', UserController.getReadingList);
+//router.get('/booklist', UserController.getReadingList);
 
 /*
 router.get('/books', userController.getUserBooks);      // Kullanıcıya ait kitaplar

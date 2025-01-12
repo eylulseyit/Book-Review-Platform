@@ -19,6 +19,12 @@ module.exports = {
     getUserProfile: async (req, res) => {
         const token = req.headers.authorization.split(' ')[1];
 
+        if (!token) {
+            return res.status(401).json({ message: 'Authorization token missing' });
+        }
+
+        //ADD A FUNCTION FOR IF THERE IS NO BOOKLIST FOR USER, CREATE ONE
+
         try {
             const decoded = jwt.verify(token, 'your-secret-key');
             const user = await User.findByPk(decoded.id);
@@ -33,11 +39,15 @@ module.exports = {
     },
 
     updateUser: async (req, res) => {
-        const { id } = req.params;
-        const { username, email, password } = req.body;
-        console.log("uodateUser works");
+        const token = req.headers.authorization.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'Authorization token missing' });
+        }
+        const { username, email, password} = req.body;
+
         try {
-            const user = await User.findByPk(id);
+            const decoded = jwt.verify(token, 'your-secret-key');
+            const user = await User.findByPk(decoded.id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
@@ -54,9 +64,16 @@ module.exports = {
     },
 
     updateBio: async (req, res) => {
-        const { id } = req.params;
+        const token = req.headers.authorization.split(' ')[1];
+
+        if (!token) {
+            return res.status(401).json({ message: 'Authorization token missing' });
+        }
+
         const { bio } = req.body;
         try {
+            const decoded = jwt.verify(token, 'your-secret-key');
+            const id = decoded.id;
             const user = await User.findByPk(id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
@@ -71,8 +88,13 @@ module.exports = {
     },
 
     deleteUser: async (req, res) => {
-        const { id } = req.params;
+        const token = req.headers.authorization.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'Authorization token missing' });
+        }
         try {
+            const decoded = jwt.verify(token, 'your-secret-key');
+            const id = decoded.id;
             const user = await User.findByPk(id);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
@@ -85,9 +107,15 @@ module.exports = {
     },
 
     getUserReadingLists: async (req, res) => {
+        
+        const token = req.headers.authorization.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'Authorization token missing' });
+        }
         try {
-            const userId = req.params.userId; // Assuming userId is passed as URL parameter
-            const user = await User.findByPk(userId, {
+            const decoded = jwt.verify(token, 'your-secret-key');
+            const id = decoded.id;
+            const user = await User.findByPk(id,{
                 include: {
                     model: ReadingList,
                     include: Book // Include books for each list
@@ -106,13 +134,19 @@ module.exports = {
 
     // Function to create a new reading list for a user
     createReadingListForUser: async (req, res) => {
+        const token = req.headers.authorization.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'Authorization token missing' });
+        }
+
         try {
             const { listname } = req.body;
-            const userId = req.params.id;
+            const decoded = jwt.verify(token, 'your-secret-key');
+            const id = decoded.id;
 
             const newList = await ReadingList.create({
                 listname: listname,
-                user_ID: userId
+                user_ID: id
             });
 
             res.status(201).json(newList);
@@ -123,26 +157,50 @@ module.exports = {
 
     getReadingList: async (req, res) => {
         try {
-            const userId = req.params.userId;
-            const listId = req.params.listId;
+            // Extract and validate token
+            const token = req.headers.authorization?.split(' ')[1];
+            if (!token) {
+                return res.status(401).json({ message: 'Authorization token missing' });
+            }
 
+            const decoded = jwt.verify(token, 'your-secret-key');
+            const userId = decoded.id;
+
+            // Validate that listId is a number
+            const listId = parseInt(req.params.listId, 10);
+            if (isNaN(listId)) {
+                return res.status(400).json({ message: 'Invalid list ID' });
+            }
+
+            // Retrieve the reading list and include associated books through BookInList
             const readingList = await ReadingList.findOne({
                 where: { list_ID: listId, user_ID: userId },
-                include: {
-                    model: Book,
-                    through: BookInList
-                }
+                include: [
+                    {
+                        model: BookInList,
+                        include: {
+                            model: Book,
+                            attributes: ['book_ID', 'title', 'author', 'genre', 'isbn', 'description'],
+                        },
+                    },
+                ],
             });
 
+            // Check if the reading list exists
             if (!readingList) {
                 return res.status(404).json({ message: 'Reading list not found' });
             }
 
+            // Respond with the reading list and associated books
             res.status(200).json(readingList);
         } catch (error) {
-            res.status(500).json({ message: 'Error fetching reading list', error });
+            if (error.name === 'JsonWebTokenError') {
+                return res.status(401).json({ message: 'Invalid or expired token' });
+            }
+            res.status(500).json({ message: 'Error fetching reading list', error: error.message });
         }
     },
+    
 
     // Function to add a book to a user's reading list
     addBookToReadingList: async (req, res) => {
@@ -167,30 +225,7 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ message: 'Error adding book to list', error });
         }
-    },
-
-    // Function to update the progress of a book in a user's list
-    updateBookProgress: async (req, res) => {
-        try {
-            const { list_ID, book_ID } = req.params;
-            const { progress } = req.body;
-
-            // Find the specific book entry in BookInList
-            const bookInList = await BookInList.findOne({
-                where: { list_ID, book_ID }
-            });
-
-            if (!bookInList) {
-                return res.status(404).json({ message: 'Book not found in list' });
-            }
-
-            bookInList.progress = progress;
-            await bookInList.save();
-
-            res.status(200).json(bookInList);
-        } catch (error) {
-            res.status(500).json({ message: 'Error updating book progress', error });
-        }
     }
+
 };
 
