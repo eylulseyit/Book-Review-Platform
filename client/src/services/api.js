@@ -83,3 +83,21 @@ export const loginUser = async ({ email, password }) => {
 
     return response.json(); // Token'ı döndürür
 };
+
+// Kategorileri API'den çekmek için
+export const fetchCategories = async () => {
+    const response = await fetch(`${BASE_URL}/books/getAllCategories`);
+    if (!response.ok) {
+        throw new Error('Kategoriler alınamadı');
+    }
+    return response.json();
+};
+
+// Belirli bir kategorideki kitapları çekmek için
+export const fetchBooksByCategory = async (categoryId) => {
+    const response = await fetch(`${BASE_URL}/books/getBookByCategory/${categoryId}`);
+    if (!response.ok) {
+        throw new Error('Kitaplar alınamadı');
+    }
+    return response.json();
+};

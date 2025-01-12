@@ -1,72 +1,114 @@
-/* Home.css */
-
+/* Ana konteyner */
 .home-container {
     text-align: center;
-    margin-top: 50px;
-}
-
-.home-container h1 {
-    font-size: 36px;
+    margin-top: 30px;
+    font-family: 'Arial', sans-serif;
     color: #333;
 }
 
-/* Ana buton ve başlık için düzenleme */
-.home-container-header {
-    display: flex;
-    justify-content: space-between;
-    /* Buton ve başlık arasındaki boşluğu eşitler */
-    align-items: center;
+/* Başlık stili */
+.home-container h1 {
+    font-size: 32px;
+    color: #2c3e50;
     margin-bottom: 20px;
-    padding: 0 20px;
-    /* Sağ ve sol kenarlardan boşluk */
 }
 
-.home-container-header h1 {
-    margin: 0;
-    /* Başlık ile buton arasındaki boşluğu ortadan kaldırıyoruz */
+/* Kategoriler konteyneri */
+.category-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
 }
 
-.home-container button {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
+/* Kategori kartları */
+.category-card {
+    padding: 15px 25px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    text-align: center;
+}
+
+.category-card:hover {
+    background-color: #3498db;
+    color: white;
+    transform: translateY(-5px);
+}
+
+.category-card h2 {
+    margin: 0;
     font-size: 18px;
 }
 
-.home-container button:hover {
-    background-color: #0056b3;
-}
-
+/* Kitap listesi konteyneri */
 .book-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 0;
     padding: 0 20px;
-    /* Kitap listesi için kenar boşluğu ekliyoruz */
 }
 
+/* Kitap kartları */
 .book-card {
-    width: 30%;
-    margin: 10px 0;
-    padding: 20px;
+    width: 28%;
+    background-color: #f8f9fa;
+    padding: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .book-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-.book-card h2 {
+.book-card h3 {
     font-size: 20px;
-    color: #333;
+    color: #2c3e50;
+    margin-bottom: 10px;
 }
 
 .book-card p {
     font-size: 14px;
     color: #666;
+    line-height: 1.5;
+}
+
+/* Detaylar için stil */
+.book-details {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.book-details h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.book-details p {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.8;
+}
+
+/* Responsive düzen */
+@media (max-width: 768px) {
+
+    .book-card,
+    .category-card {
+        width: 100%;
+    }
 }

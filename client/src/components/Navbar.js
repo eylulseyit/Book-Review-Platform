@@ -27,9 +27,7 @@ const Navbar = () => {
                 <li>
                     <Link to="/books">Books</Link>
                 </li>
-                <li>
-                    <Link to="/books/1">Book Details</Link>
-                </li>
+
                 {/* Giriş yapmış kullanıcı için Profile bağlantısı */}
                 {isLoggedIn ? (
                     <li>

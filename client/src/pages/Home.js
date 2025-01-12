@@ -1,27 +1,42 @@
-// src/pages/Home.js
 import React, { useEffect, useState } from 'react';
-import { fetchBooks } from '../services/api'; // Kitapları API'den çeken fonksiyon
-import { useNavigate } from 'react-router-dom'; // Kitap detayına yönlendirme için
+import { fetchCategories, fetchBooksByCategory } from '../services/api';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
+
 const Home = () => {
+    const [categories, setCategories] = useState([]);
     const [books, setBooks] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
-        const getBooks = async () => {
+        const getCategories = async () => {
             try {
-                const fetchedBooks = await fetchBooks();
-                setBooks(fetchedBooks);
+                const fetchedCategories = await fetchCategories();
+                setCategories(fetchedCategories);
             } catch (err) {
-                setError('Kitaplar yüklenirken bir hata oluştu.');
+                setError('Kategoriler yüklenirken bir hata oluştu.');
             } finally {
                 setLoading(false);
             }
         };
-        getBooks();
+        getCategories();
     }, []);
+
+    const handleCategoryClick = async (categoryId) => {
+        setLoading(true);
+        try {
+            const fetchedBooks = await fetchBooksByCategory(categoryId);
+            setBooks(fetchedBooks);
+            setSelectedCategory(categoryId);
+        } catch (err) {
+            setError('Kitaplar yüklenirken bir hata oluştu.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     if (loading) {
         return <div>Yükleniyor...</div>;
@@ -34,25 +49,42 @@ const Home = () => {
     return (
         <div>
             <h1>Hoşgeldiniz!</h1>
-            <p>Kitap okuma platformuna hoş geldiniz. Kitaplarınızı burada keşfedin.</p>
+            <p>Kategorilere göz atın ve kitapları keşfedin.</p>
 
-            <div className="book-list">
-                {books.length === 0 ? (
-                    <p>Henüz kitap eklenmemiş.</p>
-                ) : (
-                    books.map((book) => (
-                        <div
-                            key={book.book_ID}
-                            className="book-card"
-                            onClick={() => navigate(`/books/${book.book_ID}`)}
-                        >
-                            <h2>{book.title}</h2>
-                            <p>{book.author}</p>
-                            <p>{book.description.slice(0, 100)}...</p>
-                        </div>
-                    ))
-                )}
+            {/* Kategoriler */}
+            <div className="category-list">
+                {categories.map((category) => (
+                    <button
+                        key={category.id}
+                        onClick={() => handleCategoryClick(category.id)}
+                        className={`category-button ${selectedCategory === category.id ? 'active' : ''
+                            }`}
+                    >
+                        {category.name}
+                    </button>
+                ))}
             </div>
+
+            {/* Kitaplar */}
+            {selectedCategory && (
+                <div className="book-list">
+                    {books.length === 0 ? (
+                        <p>Bu kategoride henüz kitap bulunmuyor.</p>
+                    ) : (
+                        books.map((book) => (
+                            <div
+                                key={book.book_ID}
+                                className="book-card"
+                                onClick={() => navigate(`/books/${book.book_ID}`)}
+                            >
+                                <h2>{book.title}</h2>
+                                <p>{book.author}</p>
+                                <p>{book.description.slice(0, 100)}...</p>
+                            </div>
+                        ))
+                    )}
+                </div>
+            )}
         </div>
     );
 };
