@@ -138,7 +138,12 @@ export const updateUser = async ({ username, email, password }) => {
     return response.json();
 };
 export const fetchCategories = async () => {
-    const response = await fetch(`${BASE_URL}/books/getAllGenres`); // API'nin yeni endpoint'ini kullanıyoruz.
+    const response = await fetch(`${BASE_URL}/books/getAllGenres`, { // Tüm kategorileri almak için API'yi çağırıyoruz
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    });
     if (!response.ok) {
         throw new Error('Kategoriler alınamadı');
     }
