@@ -41,17 +41,6 @@ export const fetchProfile = async () => {
     }
 };
 
-
-// Profildeki kitapları almak için
-export const fetchProfileBooks = async () => {
-    const response = await fetch('/api/user');
-    if (!response.ok) {
-        throw new Error('Profil kitapları alınırken bir hata oluştu.');
-    }
-    const data = await response.json();
-    return data.books; // Backend'den gelen kitapları döndürüyoruz
-};
-
 // Profilinize kitap eklemek için
 export const addBookToProfile = async (bookId) => {
     const response = await fetch(`/api/profile/add-book`, {
@@ -120,3 +109,48 @@ export const fetchBooksByCategory = async (categoryId) => {
     return response.json();
 };
 
+// Biyografi güncelleme
+export const updateBio = async ({ bio }) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        throw new Error("Token bulunamadı, giriş yapmanız gerek.");
+    }
+
+    const response = await fetch(`${BASE_URL}/user/update-bio`, {
+        method: "PUT",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ bio }),
+    });
+
+    if (!response.ok) {
+        throw new Error("Biyografi güncellenemedi.");
+    }
+
+    return response.json();
+};
+
+// Kullanıcı bilgilerini güncelleme
+export const updateUser = async ({ username, email, password }) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        throw new Error("Token bulunamadı, giriş yapmanız gerek.");
+    }
+
+    const response = await fetch(`${BASE_URL}/user/update-user`, {
+        method: "PUT",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password }),
+    });
+
+    if (!response.ok) {
+        throw new Error("Kullanıcı bilgileri güncellenemedi.");
+    }
+
+    return response.json();
+};
