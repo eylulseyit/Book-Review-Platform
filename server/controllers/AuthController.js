@@ -4,36 +4,39 @@ const jwt = require('jsonwebtoken'); // Import jsonwebtoken for generating token
 
 module.exports = {
     // User registration
-
-
     register: async (req, res) => {
         const { username, email, password, bio } = req.body;
 
         try {
-            // Check if the user already exists based on the email
+            // Check if the user already exists
             const existingUser = await User.findOne({ where: { email } });
             if (existingUser) {
                 return res.status(400).json({ error: 'Email is already in use.' });
             }
 
             // Hash the password
-            const hashedPassword = await bcrypt.hash(password, 10); // 10 is the salt rounds
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-            // Create new user
+            // Create the new user
             const user = await User.create({
                 username,
                 email,
                 password_hashed: hashedPassword,
-                bio: bio || null // Set bio if provided, otherwise set it to null
+                bio: bio || null,
             });
 
-            // Generate JWT token (using a simple secret key for now)
+            // Create a default reading list for the new user
+            await ReadingList.create({
+                listname: 'My Reading List', // Default name for the reading list
+                user_ID: user.user_ID,   // Associate the list with the new user
+            });
+
+            // Generate JWT token
             const token = jwt.sign({ id: user.user_ID, email: user.email }, 'your-secret-key', { expiresIn: '1h' });
 
-            // Respond with success message and token
+            // Respond with success message
             res.status(201).json({ message: 'User registered successfully.', token });
         } catch (error) {
-            // Log and return a server error
             console.error('Registration error:', error);
             res.status(500).json({ error: 'User registration failed.', details: error.message });
         }
@@ -62,3 +65,25 @@ module.exports = {
         }
     }
 };
+
+createReadingListForUser: async (req, res) => {
+    const token = req.headers.authorization.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ message: 'Authorization token missing' });
+    }
+
+    try {
+        const { listname } = req.body;
+        const decoded = jwt.verify(token, 'your-secret-key');
+        const id = decoded.id;
+
+        const newList = await ReadingList.create({
+            listname: listname,
+            user_ID: id
+        });
+
+        res.status(201).json(newList);
+    } catch (error) {
+        res.status(500).json({ message: 'Error creating reading list', error });
+    }
+}
