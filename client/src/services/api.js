@@ -83,6 +83,24 @@ export const loginUser = async ({ email, password }) => {
 
     return response.json(); // Token'ı döndürür
 };
+// Kullanıcı kaydı işlemi
+export const registerUser = async ({ username, email, password, bio }) => {
+    const response = await fetch(`${BASE_URL}/auth/register`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password, bio }),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Kayıt işlemi başarısız.");
+    }
+
+    return response.json(); // Başarılıysa kullanıcı bilgilerini döndürür
+};
+
 
 // Kategorileri API'den çekmek için
 export const fetchCategories = async () => {
@@ -101,3 +119,4 @@ export const fetchBooksByCategory = async (categoryId) => {
     }
     return response.json();
 };
+

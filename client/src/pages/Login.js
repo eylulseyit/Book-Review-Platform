@@ -8,23 +8,22 @@ const Login = ({ setIsLoggedIn }) => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    // useEffect ile token kontrolü yapıyoruz
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
-            navigate("/profile"); // Eğer kullanıcı zaten giriş yapmışsa direkt profile sayfasına yönlendir
+            navigate("/profile");
         }
     }, [navigate]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setError(""); // Önceki hataları temizle
+        setError("");
 
         try {
-            const response = await loginUser({ email, password }); // API çağrısı
-            localStorage.setItem("token", response.token); // Token'ı kaydet
-            setIsLoggedIn(true); // Kullanıcı durumunu güncelle
-            navigate("/profile"); // Profile sayfasına yönlendir
+            const response = await loginUser({ email, password });
+            localStorage.setItem("token", response.token);
+            setIsLoggedIn(true);
+            navigate("/profile");
         } catch (err) {
             setError(err.message || "Giriş sırasında bir hata oluştu.");
         }
@@ -51,6 +50,12 @@ const Login = ({ setIsLoggedIn }) => {
                 />
                 <button type="submit">Login</button>
             </form>
+            <div>
+                <p>Hesabınız yok mu?</p>
+                <button onClick={() => navigate("/register")}>
+                    Register
+                </button>
+            </div>
         </div>
     );
 };

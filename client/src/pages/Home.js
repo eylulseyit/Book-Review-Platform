@@ -48,8 +48,8 @@ const Home = () => {
 
     return (
         <div>
-            <h1>Hoşgeldiniz!</h1>
-            <p>Kategorilere göz atın ve kitapları keşfedin.</p>
+            <h1>Welcome!</h1>
+            <p>Browse categories and discover books.</p>
 
             {/* Kategoriler */}
             <div className="category-list">
@@ -69,7 +69,7 @@ const Home = () => {
             {selectedCategory && (
                 <div className="book-list">
                     {books.length === 0 ? (
-                        <p>Bu kategoride henüz kitap bulunmuyor.</p>
+                        <p>There are no books in this category yet.</p>
                     ) : (
                         books.map((book) => (
                             <div

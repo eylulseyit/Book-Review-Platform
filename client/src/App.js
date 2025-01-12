@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import BookDetails from "./pages/BookDetails";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
+import Register from "./pages/Register"; // Register bileşenini import ettik
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -47,6 +48,7 @@ const App = () => {
             path="/login"
             element={<Login setIsLoggedIn={setIsLoggedIn} />}
           />
+          <Route path="/register" element={<Register />} /> {/* Yeni Route */}
         </Routes>
       </div>
       <Footer />

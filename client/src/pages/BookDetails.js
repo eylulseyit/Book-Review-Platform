@@ -5,7 +5,7 @@ import { fetchBooks, addBookToProfile } from '../services/api'; // Kitapları AP
 const BookDetails = () => {
     const { id } = useParams();
     const [book, setBook] = useState(null);
-    const [reviews, setReviews] = useState([]); // Yorumları tutmak için
+    const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -15,7 +15,6 @@ const BookDetails = () => {
                 const books = await fetchBooks(); // Tüm kitapları alıyoruz
                 const foundBook = books.find((b) => b.book_ID === parseInt(id)); // ID'ye göre kitabı buluyoruz
                 setBook(foundBook);
-                // Yorumlar verisini de burada alabiliriz, örneğin:
                 setReviews(foundBook.reviews || []); // Yorumları kitapla birlikte almak
             } catch (err) {
                 setError('Kitap detayları yüklenirken bir hata oluştu.');
@@ -28,7 +27,7 @@ const BookDetails = () => {
 
     const handleAddToProfile = async () => {
         try {
-            await addBookToProfile(id); // Kitabı profilimize ekliyoruz
+            await addBookToProfile(id);
             alert('Kitap profilinize eklendi!');
         } catch (err) {
             alert('Kitap eklenirken bir hata oluştu.');
@@ -46,13 +45,13 @@ const BookDetails = () => {
     return (
         <div>
             <h1>{book.title}</h1>
-            <p><strong>Yazar:</strong> {book.author}</p>
-            <p><strong>Açıklama:</strong> {book.description}</p>
+            <p><strong>Author:</strong> {book.author}</p>
+            <p><strong>Description:</strong> {book.description}</p>
 
             <h3>Yorumlar</h3>
             <div>
                 {reviews.length === 0 ? (
-                    <p>Henüz yorum yapılmamış.</p>
+                    <p>There are no comments yet.</p>
                 ) : (
                     reviews.map((review, index) => (
                         <div key={index} className="review-card">
@@ -63,7 +62,7 @@ const BookDetails = () => {
                 )}
             </div>
 
-            <button onClick={handleAddToProfile}>Profilime Ekle</button>
+            <button onClick={handleAddToProfile}>Add to My Profile</button>
         </div>
     );
 };

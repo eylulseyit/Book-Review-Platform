@@ -4,7 +4,7 @@ import React from "react";
 const Footer = () => {
     return (
         <footer>
-            <p>© 2024 Kitap Okuma Uygulaması</p>
+            <p>© 2024 Book Reading App</p>
         </footer>
     );
 };

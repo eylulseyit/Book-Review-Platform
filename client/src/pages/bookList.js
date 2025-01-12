@@ -32,9 +32,9 @@ const BookList = () => {
 
     return (
         <div className="book-list">
-            <h1>Kitap Listesi</h1>
+            <h1>Book List</h1>
             {books.length === 0 ? (
-                <p>Henüz kitap eklenmemiş.</p>
+                <p>No books have been added yet.</p>
             ) : (
                 books.map((book) => (
                     <BookCard key={book.book_ID} book={book} />

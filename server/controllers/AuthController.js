@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken'); // Import jsonwebtoken for generating token
 module.exports = {
     // User registration
 
-    
+
     register: async (req, res) => {
         const { username, email, password, bio } = req.body;
 
@@ -52,8 +52,8 @@ module.exports = {
 
             // Generate token
             const token = jwt.sign({ id: user.user_ID, email: user.email }, 'your-secret-key', { expiresIn: '1h' });
-            res.json({ 
-                message: 'Login successful.', 
+            res.json({
+                message: 'Login successful.',
                 token,
             });
         } catch (error) {

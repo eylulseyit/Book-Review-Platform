@@ -6,10 +6,10 @@ const BookCard = ({ book }) => {
     return (
         <div className="book-card">
             <h2>{book.title}</h2>
-            <p><strong>Yazar:</strong> {book.author}</p>
+            <p><strong>Author:</strong> {book.author}</p>
             <p>{book.description.substring(0, 100)}...</p> {/* Açıklamanın ilk 100 karakteri */}
             <Link to={`/books/${book.book_ID}`} className="details-link">
-                Detayları Gör
+                Details
             </Link>
         </div>
     );
