@@ -18,6 +18,10 @@ router.put('/:id', BookController.updateBook);
 // Route to delete a specific book by ID
 router.delete('/:id', BookController.deleteBook);
 
+router.get('/getAllCategories', BookController.getAllCategories);
+
+router.get('/getBookByCategory', BookController.getBookByCategory);
+
 // Add more routes here
 
 module.exports = router;
