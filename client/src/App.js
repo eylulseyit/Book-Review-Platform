@@ -12,6 +12,7 @@ import Register from "./pages/Register"; // Register bileşenini import ettik
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // useEffect içinde token kontrolü ve silme işlemi
   useEffect(() => {
     const token = localStorage.getItem("token"); // Token kontrolü
     if (token) {
@@ -19,13 +20,21 @@ const App = () => {
     } else {
       setIsLoggedIn(false);
     }
-  }, []);
+
+    // Yeniden başlatıldığında token'ı sil
+    const resetToken = () => {
+      localStorage.removeItem("token");
+    };
+
+    // Sayfa yeniden başlatıldığında token silme işlemi
+    resetToken();
+
+  }, []); // Boş array, sadece component mount olduğunda çalışır
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Token sil
+    localStorage.removeItem("token"); // Token'ı sil
     setIsLoggedIn(false); // Kullanıcı durumunu sıfırla
   };
-
   return (
     <Router>
       <Navbar />

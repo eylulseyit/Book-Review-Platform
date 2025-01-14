@@ -191,6 +191,7 @@ export const fetchUserBookLists = async () => {
         }
 
         const response = await fetch(`${BASE_URL}/user/booklists`, {
+            method: "GET",  // Change to GET method for fetching lists
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -201,12 +202,13 @@ export const fetchUserBookLists = async () => {
             throw new Error(errorResponse.message || "Kitap listeleri alınamadı.");
         }
 
-        return await response.json();
+        return await response.json(); // This will return the list IDs
     } catch (error) {
         console.error("fetchUserBookLists hata:", error.message);
         throw error;
     }
 };
+
 export const fetchBooksInList = async (listId) => {
     try {
         if (!listId) {
@@ -219,9 +221,12 @@ export const fetchBooksInList = async (listId) => {
         }
 
         const response = await fetch(`${BASE_URL}/booklist/${listId}`, {
+            method: "POST",  // Change to POST method as per backend
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json', // Ensure content type is set for JSON body
             },
+            body: JSON.stringify({ listId }), // Send listId in the body as per backend logic
         });
 
         if (!response.ok) {
@@ -229,7 +234,7 @@ export const fetchBooksInList = async (listId) => {
             throw new Error(errorResponse.message || "Liste içindeki kitaplar alınamadı.");
         }
 
-        return await response.json();
+        return await response.json(); // This will return the list of books
     } catch (error) {
         console.error("fetchBooksInList hata:", error.message);
         throw error;
