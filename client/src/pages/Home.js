@@ -15,39 +15,37 @@ const Home = () => {
     useEffect(() => {
         const getCategories = async () => {
             try {
-                const fetchedCategories = await fetchCategories(); // fetchCategories ile API'den kategorileri alıyoruz
-                console.log(fetchedCategories); // API'den gelen veriyi incelemek için
-                setCategories(fetchedCategories); // Kategorileri state'e ekliyoruz
+                const fetchedCategories = await fetchCategories();
+                console.log(fetchedCategories); // Kategorileri kontrol et
+                setCategories(fetchedCategories);
             } catch (err) {
-                setError('Kategoriler yüklenirken bir hata oluştu.'); // Hata mesajını set ediyoruz
+                setError('Kategoriler yüklenirken bir hata oluştu.');
             } finally {
-                setLoading(false); // Yükleme bitiyor
+                setLoading(false);
             }
         };
-        getCategories(); // useEffect çalıştığında kategorileri alıyoruz
+        getCategories();
     }, []);
 
-    // Kategorilere tıklandığında kitapları almak için
-    const handleCategoryClick = async (categoryId) => {
-        console.log('Selected category ID:', categoryId);  // Kategori ID'sini kontrol et
-        setLoading(true);  // Yükleme durumunu başlat
+
+    const handleCategoryClick = async (categoryName) => {
+        if (!categoryName) {
+            setError('Geçerli bir kategori seçilmedi.');
+            return;
+        }
+
+        setSelectedCategory(categoryName);  // Seçilen kategoriyi state'e alıyoruz
         try {
-            // Burada genre parametresini 'genre:' formatında gönderiyoruz
-            const fetchedBooks = await fetchBooksByCategory(categoryId); // Seçilen kategoriye ait kitapları alıyoruz
-            setBooks(fetchedBooks);  // Kitapları state'e ekliyoruz
-            setSelectedCategory(categoryId); // Seçilen kategori ID'sini state'e ekliyoruz
+            console.log(`Selected category: ${categoryName}`);  // Seçilen kategori ismini loglayalım
+            const fetchedBooks = await fetchBooksByCategory(categoryName);  // Kategorinin kitaplarını alıyoruz
+            setBooks(fetchedBooks);  // Kitapları state'e alıyoruz
         } catch (err) {
-            console.error('Error fetching books:', err);  // Hata mesajını konsola yazdır
-            setError('Kitaplar yüklenirken bir hata oluştu.'); // Hata mesajını set ediyoruz
-        } finally {
-            setLoading(false);  // Yükleme durumunu sonlandır
+            setError('Kitaplar alınamadı');
         }
     };
 
-
-    // Yükleniyor durumunda gösterilecek mesaj
     if (loading) {
-        return <div>Yükleniyor...</div>;
+        return <div>Loading...</div>;
     }
 
     // Hata durumunda gösterilecek mesaj
@@ -60,15 +58,14 @@ const Home = () => {
             <h1>Welcome!</h1>
             <p>Browse categories and discover books.</p>
 
-            {/* Kategoriler */}
             <div className="category-list">
                 {categories.map((category) => (
                     <button
-                        key={category.id}  // 'category.id' benzersiz bir anahtar olmalı
-                        onClick={() => handleCategoryClick(category.id)}  // 'category.id' ile tıklama işlevi
-                        className={`category-button ${selectedCategory === category.id ? 'active' : ''}`}
+                        key={category.genre}  // Benzersiz olan category.genre'i key olarak kullanıyoruz
+                        onClick={() => handleCategoryClick(category.genre)}  // category.genre'i kullanıyoruz
+                        className={`category-button ${selectedCategory === category.genre ? 'active' : ''}`}
                     >
-                        {category.name}
+                        <span>{category.genre}</span>  {/* Kategori ismi buraya ekleniyor */}
                     </button>
                 ))}
             </div>

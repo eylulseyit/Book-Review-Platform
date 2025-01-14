@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { fetchProfile, updateUser, updateBio } from "../services/api";
+import { fetchProfile, updateUser, updateBio, fetchUserBookLists, fetchBooksInList } from "../services/api";
 import './Profile.css'; // CSS dosyasının yolu
-
 
 const Profile = ({ handleLogout }) => {
     const [user, setUser] = useState(null);
     const [error, setError] = useState("");
     const [bio, setBio] = useState("");
+    const [bookLists, setBookLists] = useState([]); // Kullanıcının kitap listelerini tutacak state
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -16,14 +16,28 @@ const Profile = ({ handleLogout }) => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const data = await fetchProfile(); // API'den kullanıcı bilgilerini al
+                // Kullanıcı bilgilerini al
+                const data = await fetchProfile();
                 setUser(data);
-                setBio(data.bio || ""); // Biyografiyi doldur
+                setBio(data.bio || "");
                 setFormData({
                     username: data.username || "",
                     email: data.email || "",
                     password: "",
                 });
+
+                // Kullanıcının kitap listelerini al
+                const userBookLists = await fetchUserBookLists();
+                const detailedLists = await Promise.all(
+                    userBookLists.map(async (list) => {
+                        const books = await fetchBooksInList(list.list_ID); // Her liste için kitapları al
+                        return {
+                            listName: list.listname, // Liste adı
+                            books, // Listeye ait kitaplar
+                        };
+                    })
+                );
+                setBookLists(detailedLists); // Kitap listelerini güncelle
             } catch (err) {
                 setError(err.message);
             }
@@ -35,7 +49,7 @@ const Profile = ({ handleLogout }) => {
     const handleBioUpdate = async (e) => {
         e.preventDefault();
         try {
-            const updatedUser = await updateBio({ bio }); // Biyografi API çağrısı
+            const updatedUser = await updateBio({ bio });
             setUser(updatedUser);
             alert("Biyografi başarıyla güncellendi!");
         } catch (err) {
@@ -46,7 +60,7 @@ const Profile = ({ handleLogout }) => {
     const handleUserUpdate = async (e) => {
         e.preventDefault();
         try {
-            const updatedUser = await updateUser(formData); // Kullanıcı bilgilerini güncelleme API çağrısı
+            const updatedUser = await updateUser(formData);
             setUser(updatedUser);
             alert("Kullanıcı bilgileri başarıyla güncellendi!");
         } catch (err) {
@@ -68,6 +82,29 @@ const Profile = ({ handleLogout }) => {
             <p><strong>Ad:</strong> {user.username}</p>
             <p><strong>Email:</strong> {user.email}</p>
             {user.bio && <p><strong>Biyografi:</strong> {user.bio}</p>}
+
+            {/* Kitap Listeleri */}
+            <h2>Kitap Listeleri</h2>
+            {bookLists.length > 0 ? (
+                bookLists.map((list, index) => (
+                    <div key={index}>
+                        <h3>{list.listName}</h3>
+                        <ul>
+                            {list.books.length > 0 ? (
+                                list.books.map((book, bookIndex) => (
+                                    <li key={bookIndex}>
+                                        <strong>{book.title}</strong> - {book.author}
+                                    </li>
+                                ))
+                            ) : (
+                                <p>Bu liste boş.</p>
+                            )}
+                        </ul>
+                    </div>
+                ))
+            ) : (
+                <p>Kitap listeleriniz boş.</p>
+            )}
 
             {/* Biyografi Güncelleme Formu */}
             <form onSubmit={handleBioUpdate}>
@@ -125,4 +162,3 @@ const Profile = ({ handleLogout }) => {
 };
 
 export default Profile;
-//okay

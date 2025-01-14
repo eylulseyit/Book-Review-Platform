@@ -137,29 +137,101 @@ export const updateUser = async ({ username, email, password }) => {
 
     return response.json();
 };
-export const fetchCategories = async () => {
-    const response = await fetch(`${BASE_URL}/books/getAllGenres`, { // Tüm kategorileri almak için API'yi çağırıyoruz
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
-    if (!response.ok) {
-        throw new Error('Kategoriler alınamadı');
-    }
-    return response.json();
-};
-export const fetchBooksByCategory = async (genre) => {
-    const response = await fetch(`${BASE_URL}/books/getBookByGenre`, {  // Genre parametresi ile API çağırıyoruz
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ genre }), // Genre'yi API'ye gönderiyoruz
-    });
 
-    if (!response.ok) {
-        throw new Error('Kitaplar alınamadı');
+
+// Kategorileri almak için API fonksiyonu
+export const fetchCategories = async () => {
+    try {
+        const response = await fetch(`${BASE_URL}/books/getAllGenres`, {
+            method: "POST",  // Kategorileri almak için POST isteği
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error('Kategoriler alınamadı');
+        }
+
+        const categories = await response.json();
+        return categories;  // Kategorileri döndürüyoruz
+    } catch (error) {
+        throw error;  // Hata durumunda hata mesajını fırlatıyoruz
     }
-    return response.json();
+};
+
+// Kategorilere göre kitapları getiren fonksiyon
+export const fetchBooksByCategory = async (genre) => {
+    try {
+        const response = await fetch(`${BASE_URL}/books/getBookByGenre`, {
+            method: "POST",  // POST isteği gönderiyoruz
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ genre }),  // Genre parametresini body olarak gönderiyoruz
+        });
+
+        if (!response.ok) {
+            throw new Error('Kitaplar alınamadı');
+        }
+
+        const books = await response.json();  // Kitapları JSON formatında alıyoruz
+        return books;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+export const fetchUserBookLists = async () => {
+    try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            throw new Error("Token bulunamadı, giriş yapmanız gerek.");
+        }
+
+        const response = await fetch(`${BASE_URL}/user/booklists`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.message || "Kitap listeleri alınamadı.");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("fetchUserBookLists hata:", error.message);
+        throw error;
+    }
+};
+export const fetchBooksInList = async (listId) => {
+    try {
+        if (!listId) {
+            throw new Error("Geçerli bir liste ID'si sağlanmadı.");
+        }
+
+        const token = localStorage.getItem("token");
+        if (!token) {
+            throw new Error("Token bulunamadı, giriş yapmanız gerek.");
+        }
+
+        const response = await fetch(`${BASE_URL}/booklist/${listId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.message || "Liste içindeki kitaplar alınamadı.");
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("fetchBooksInList hata:", error.message);
+        throw error;
+    }
 };
