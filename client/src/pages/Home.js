@@ -11,37 +11,46 @@ const Home = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    // Kategorileri almak için useEffect kullanıyoruz
     useEffect(() => {
         const getCategories = async () => {
             try {
-                const fetchedCategories = await fetchCategories();
-                setCategories(fetchedCategories);
+                const fetchedCategories = await fetchCategories(); // fetchCategories ile API'den kategorileri alıyoruz
+                console.log(fetchedCategories); // API'den gelen veriyi incelemek için
+                setCategories(fetchedCategories); // Kategorileri state'e ekliyoruz
             } catch (err) {
-                setError('Kategoriler yüklenirken bir hata oluştu.');
+                setError('Kategoriler yüklenirken bir hata oluştu.'); // Hata mesajını set ediyoruz
             } finally {
-                setLoading(false);
+                setLoading(false); // Yükleme bitiyor
             }
         };
-        getCategories();
+        getCategories(); // useEffect çalıştığında kategorileri alıyoruz
     }, []);
 
+    // Kategorilere tıklandığında kitapları almak için
     const handleCategoryClick = async (categoryId) => {
-        setLoading(true);
+        console.log('Selected category ID:', categoryId);  // Kategori ID'sini kontrol et
+        setLoading(true);  // Yükleme durumunu başlat
         try {
-            const fetchedBooks = await fetchBooksByCategory(categoryId);
-            setBooks(fetchedBooks);
-            setSelectedCategory(categoryId);
+            // Burada genre parametresini 'genre:' formatında gönderiyoruz
+            const fetchedBooks = await fetchBooksByCategory(categoryId); // Seçilen kategoriye ait kitapları alıyoruz
+            setBooks(fetchedBooks);  // Kitapları state'e ekliyoruz
+            setSelectedCategory(categoryId); // Seçilen kategori ID'sini state'e ekliyoruz
         } catch (err) {
-            setError('Kitaplar yüklenirken bir hata oluştu.');
+            console.error('Error fetching books:', err);  // Hata mesajını konsola yazdır
+            setError('Kitaplar yüklenirken bir hata oluştu.'); // Hata mesajını set ediyoruz
         } finally {
-            setLoading(false);
+            setLoading(false);  // Yükleme durumunu sonlandır
         }
     };
 
+
+    // Yükleniyor durumunda gösterilecek mesaj
     if (loading) {
         return <div>Yükleniyor...</div>;
     }
 
+    // Hata durumunda gösterilecek mesaj
     if (error) {
         return <div>{error}</div>;
     }
@@ -55,27 +64,27 @@ const Home = () => {
             <div className="category-list">
                 {categories.map((category) => (
                     <button
-                        key={category.id}
-                        onClick={() => handleCategoryClick(category.id)}
-                        className={`category-button ${selectedCategory === category.id ? 'active' : ''
-                            }`}
+                        key={category.id}  // 'category.id' benzersiz bir anahtar olmalı
+                        onClick={() => handleCategoryClick(category.id)}  // 'category.id' ile tıklama işlevi
+                        className={`category-button ${selectedCategory === category.id ? 'active' : ''}`}
                     >
                         {category.name}
                     </button>
                 ))}
             </div>
 
+
             {/* Kitaplar */}
             {selectedCategory && (
                 <div className="book-list">
                     {books.length === 0 ? (
-                        <p>There are no books in this category yet.</p>
+                        <p>Bu kategoride henüz kitap yok.</p> // Eğer kitap yoksa bu mesajı göster
                     ) : (
                         books.map((book) => (
                             <div
-                                key={book.book_ID}
+                                key={book.book_ID}  // 'book.book_ID' benzersiz bir anahtar olmalı
                                 className="book-card"
-                                onClick={() => navigate(`/books/${book.book_ID}`)}
+                                onClick={() => navigate(`/books/${book.book_ID}`)}  // Kitaba tıklandığında detay sayfasına yönlendiriyoruz
                             >
                                 <h2>{book.title}</h2>
                                 <p>{book.author}</p>
