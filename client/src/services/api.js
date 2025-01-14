@@ -184,17 +184,17 @@ export const fetchBooksByCategory = async (genre) => {
 
 export const fetchReadingListBooks = async () => {
     try {
-        const token = localStorage.getItem("token"); // localStorage'dan token al
+        const token = localStorage.getItem("token"); // Get token from localStorage
 
         if (!token) {
             throw new Error('Authorization token is missing');
         }
 
-        const response = await fetch('/api/getReadingListBooks', {
+        const response = await fetch(`${BASE_URL}/user/booklist`, {
             method: "POST",  // Sending POST request
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`, // Sending token in Authorization header
+                "Authorization": `Bearer ${token}`, // Send token in Authorization header
             },
         });
 
@@ -203,11 +203,15 @@ export const fetchReadingListBooks = async () => {
         }
 
         const books = await response.json();  // Parse the response as JSON to get the books
-        return books;
+        
+        // Map the response to only return the `Book` objects
+        return books.map(item => item.Book);  // If books are wrapped in a "Book" field
+
     } catch (error) {
         throw error;  // Propagate the error to be handled by the caller
     }
 };
+
 
 
 

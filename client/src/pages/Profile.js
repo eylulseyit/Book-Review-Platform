@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { fetchProfile, updateUser, updateBio, fetchUserBookLists, fetchBooksInList } from "../services/api";
+import { fetchProfile, updateUser, updateBio, fetchReadingListBooks } from "../services/api";
 import './Profile.css'; // CSS dosyasının yolu
 
 const Profile = ({ handleLogout }) => {
     const [user, setUser] = useState(null);
     const [error, setError] = useState("");
     const [bio, setBio] = useState("");
-    const [bookLists, setBookLists] = useState([]); // Kullanıcının kitap listelerini tutacak state
+    const [bookLists, setBookLists] = useState([]); // Kitap listesini tutacak state
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -16,33 +16,24 @@ const Profile = ({ handleLogout }) => {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                // Kullanıcı bilgilerini al
+                // Kullanıcı profilini al
                 const data = await fetchProfile();
                 setUser(data);
                 setBio(data.bio || "");
                 setFormData({
                     username: data.username || "",
                     email: data.email || "",
-                    password: "",
+                    password: "", // Şifreyi temizle
                 });
-
-                // Kullanıcının kitap listelerini al
-                const userBookLists = await fetchUserBookLists();
-                const detailedLists = await Promise.all(
-                    userBookLists.map(async (list) => {
-                        const books = await fetchBooksInList(list.list_ID); // Her liste için kitapları al
-                        return {
-                            listName: list.listname, // Liste adı
-                            books, // Listeye ait kitaplar
-                        };
-                    })
-                );
-                setBookLists(detailedLists); // Kitap listelerini güncelle
+    
+                // Kitap listesini al
+                const books = await fetchReadingListBooks();
+                setBookLists(books);  // Kitapları set et
             } catch (err) {
                 setError(err.message);
             }
         };
-
+    
         fetchUserProfile();
     }, []);
 
@@ -83,27 +74,18 @@ const Profile = ({ handleLogout }) => {
             <p><strong>Email:</strong> {user.email}</p>
             {user.bio && <p><strong>Biyografi:</strong> {user.bio}</p>}
 
-            {/* Kitap Listeleri */}
-            <h2>Kitap Listeleri</h2>
+            {/* Kitap Listesi */}
+            <h2>Kitap Listesi</h2>
             {bookLists.length > 0 ? (
-                bookLists.map((list, index) => (
-                    <div key={index}>
-                        <h3>{list.listName}</h3>
-                        <ul>
-                            {list.books.length > 0 ? (
-                                list.books.map((book, bookIndex) => (
-                                    <li key={bookIndex}>
-                                        <strong>{book.title}</strong> - {book.author}
-                                    </li>
-                                ))
-                            ) : (
-                                <p>Bu liste boş.</p>
-                            )}
-                        </ul>
-                    </div>
-                ))
+                <ul>
+                    {bookLists.map((book, index) => (
+                        <li key={index}>
+                            <strong>{book.title}</strong> - {book.author}
+                        </li>
+                    ))}
+                </ul>
             ) : (
-                <p>Kitap listeleriniz boş.</p>
+                <p>Kitap listeniz boş.</p>
             )}
 
             {/* Biyografi Güncelleme Formu */}
@@ -155,7 +137,7 @@ const Profile = ({ handleLogout }) => {
                     cursor: "pointer",
                 }}
             >
-                LogOut
+                Çıkış Yap
             </button>
         </div>
     );
