@@ -22,14 +22,14 @@ const listIds = [149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161
       const listID = newList.list_ID; // Get the ID of the created list
 
       // Generate a random number of books (between 1 and 10)
-      
+
     }
 
     // Commit the transaction if everything succeeds
     console.log("All operations completed successfully.");
   } catch (err) {
     // Roll back the transaction on error
-    await t.rollback();
+
     console.error("Transaction rolled back due to error:", err);
   }
 })();

@@ -6,12 +6,12 @@ const BookInList = require('../models/BookInList');
 const Book = require('../models/Book');
 
 const userIds = [53, 33, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 34, 52, 74, 35, 36, 37, 38, 39, 40, 41];
-const listIds = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,32,33];
+const listIds = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39];
 
 (async () => {
   const t = await sequelize.transaction(); // Transaction başlatılıyor
 
-  try { 
+  try {
     console.log('Transaction started.');
 
     for (let i = 0; i < userIds.length; i++) {
@@ -50,7 +50,7 @@ const listIds = [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
         await BookInList.create({
           list_ID: listID,
           book_ID: bookid,
-        
+
         }, { transaction: t }); // Transaction parametresi ekleniyor
       }
     }
