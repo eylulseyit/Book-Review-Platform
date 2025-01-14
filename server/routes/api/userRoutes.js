@@ -20,7 +20,7 @@ router.delete('/delete-user', UserController.deleteUser);
 
 router.get('/booklists', UserController.getUserReadingLists);
 
-router.get('/booklist', UserController.getReadingList);
+router.post('/booklist', UserController.getReadingListBooks);
 
 router.post('/addBookToList', UserController.addBookToReadingList);
 

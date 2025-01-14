@@ -116,19 +116,19 @@ module.exports = {
         }
         try {
             const decoded = jwt.verify(token, 'your-secret-key');
-            const id = decoded.id;
-            const user = await User.findByPk(id,{
-                include: {
-                    model: ReadingList,
-                    include: Book // Include books for each list
-                }
+            const userID = decoded.id;
+            const readingLists = await ReadingList.findAll({
+                where: { user_ID: userID }, // Use the correct foreign key field
+                attributes: ['list_ID'] // Fetch only the list_ID field
             });
 
-            if (!user) {
-                return res.status(404).json({ message: 'User not found' });
+            if (!readingLists.length) {
+                return res.status(404).json({ message: 'No reading lists found for this user' });
             }
 
-            res.status(200).json(user.ReadingLists);
+            const readingListIDs = readingLists.map((list) => list.list_ID);
+
+            res.status(200).json(readingListIDs);
         } catch (error) {
             res.status(500).json({ message: 'Error fetching user reading lists', error });
         }
@@ -157,7 +157,7 @@ module.exports = {
         }
     },
 
-    getReadingList: async (req, res) => {
+    getReadingListBooks: async (req, res) => {
         try {
             // Extract and validate token
             const token = req.headers.authorization?.split(' ')[1];
@@ -169,32 +169,30 @@ module.exports = {
             const userId = decoded.id;
 
             // Validate that listId is a number
-            const listId = parseInt(req.params.listId, 10);
+            const { listId } = req.body;
             if (isNaN(listId)) {
                 return res.status(400).json({ message: 'Invalid list ID' });
             }
 
             // Retrieve the reading list and include associated books through BookInList
-            const readingList = await ReadingList.findOne({
-                where: { list_ID: listId, user_ID: userId },
-                include: [
-                    {
-                        model: BookInList,
-                        include: {
-                            model: Book,
-                            attributes: ['book_ID', 'title', 'author', 'genre', 'isbn', 'description'],
-                        },
-                    },
-                ],
-            });
+            // Query BookInList and include associated books
+        const books = await BookInList.findAll({
+            where: { list_ID: listId },
+            include: [
+                {
+                    model: Book, // Include the Book model
+                    attributes: ['book_ID', 'title', 'author', 'genre', 'isbn', 'description'], // Select specific fields
+                },
+            ],
+        });
 
             // Check if the reading list exists
-            if (!readingList) {
+            if (!books.length) {
                 return res.status(404).json({ message: 'Reading list not found' });
             }
 
             // Respond with the reading list and associated books
-            res.status(200).json(readingList);
+            res.status(200).json(books);
         } catch (error) {
             if (error.name === 'JsonWebTokenError') {
                 return res.status(401).json({ message: 'Invalid or expired token' });
