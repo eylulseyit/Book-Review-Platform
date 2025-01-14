@@ -28,7 +28,9 @@ router.delete('/deleteBookFromList', UserController.deleteBookFromReadingList);
 
 router.post('/addReview', UserController.addReview);
 
-router.post('/addComment', UserController.Comment);
+router.post('/addComment', UserController.addComment);
+
+router.post('/checkToken', UserController.checkTokenValidation);
 
 /*
 router.get('/books', userController.getUserBooks);      // Kullanıcıya ait kitaplar

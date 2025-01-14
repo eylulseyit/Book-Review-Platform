@@ -18,6 +18,27 @@ module.exports = {
         }
     },
 
+    checkTokenValidation: (req, res, next) => {
+        // Token'ı isteğin header'ından alın
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+      
+        if (!token) {
+          return res.status(401).json({ message: 'Token required' });
+        }
+      
+        try {
+          // Token'ı doğrulamak için secret key kullanarak decode et
+          const decoded = jwt.verify(token, 'your-secret-key'); // Secret key'inizi buraya yazın
+          
+          // Token'dan kullanıcı bilgilerini ekleyin
+          req.user = decoded;
+          next(); // Middleware'i geç
+        } catch (error) {
+          return res.status(401).json({ message: 'Invalid or expired token' });
+        }
+    },
+      
+
     getUserProfile: async (req, res) => {
         const token = req.headers.authorization.split(' ')[1];
 
@@ -286,7 +307,7 @@ module.exports = {
         }
     },
 
-    Comment: async (req, res) => {
+    addComment: async (req, res) => {
         try {
             const token = req.headers.authorization?.split(' ')[1];
             if (!token) {
