@@ -261,7 +261,13 @@ module.exports = {
     addReview: async (req, res) => {
         try {
             const { rating, review_text, book_ID } = req.body;
+            const token = req.headers.authorization?.split(' ')[1];
+            if (!token) {
+                return res.status(401).json({ message: 'Authorization token missing' });
+            }
 
+            const decoded = jwt.verify(token, 'your-secret-key');
+            const userId = decoded.id;
             // Ensure the book exists
             const book = await Book.findByPk(book_ID);
 
@@ -270,10 +276,10 @@ module.exports = {
             }
 
             const newReview = await Review.create({
-                rating,
-                review_text,
-                book_ID,
-                user_ID,
+                rating: rating,
+                review_text: review_text,
+                book_ID : book_ID,
+                user_ID : userId,
             });
 
             res.status(201).json(newReview);
