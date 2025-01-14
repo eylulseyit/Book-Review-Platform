@@ -129,7 +129,7 @@ module.exports = {
         }
     },
 
-    getUserReadingLists: async (req, res) => {
+    /*getUserReadingLists: async (req, res) => {
         
         const token = req.headers.authorization.split(' ')[1];
         if (!token) {
@@ -153,7 +153,7 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ message: 'Error fetching user reading lists', error });
         }
-    },
+    },*/
 
     // Function to create a new reading list for a user
     createReadingListForUser: async (req, res) => {
@@ -185,42 +185,48 @@ module.exports = {
             if (!token) {
                 return res.status(401).json({ message: 'Authorization token missing' });
             }
-
+    
             const decoded = jwt.verify(token, 'your-secret-key');
             const userId = decoded.id;
-
-            // Validate that listId is a number
-            const { listId } = req.body;
-            if (isNaN(listId)) {
-                return res.status(400).json({ message: 'Invalid list ID' });
+    
+            // Retrieve the user's reading list (since each user has only one list)
+            const readingList = await ReadingList.findOne({
+                where: { user_ID: userId },
+                attributes: ['list_ID'], // Only fetch the list_ID field
+            });
+    
+            if (!readingList) {
+                return res.status(404).json({ message: 'Reading list not found for this user' });
             }
-
-            // Retrieve the reading list and include associated books through BookInList
-            // Query BookInList and include associated books
-        const books = await BookInList.findAll({
-            where: { list_ID: listId },
-            include: [
-                {
-                    model: Book, // Include the Book model
-                    attributes: ['book_ID', 'title', 'author', 'genre', 'isbn', 'description'], // Select specific fields
-                },
-            ],
-        });
-
-            // Check if the reading list exists
+    
+            const listId = readingList.list_ID;
+    
+            // Retrieve the books associated with the reading list
+            const books = await BookInList.findAll({
+                where: { list_ID: listId },
+                include: [
+                    {
+                        model: Book, // Include the Book model
+                        attributes: ['book_ID', 'title', 'author', 'genre', 'isbn', 'description'], // Select specific fields
+                    },
+                ],
+            });
+    
+            // Check if the reading list contains any books
             if (!books.length) {
-                return res.status(404).json({ message: 'Reading list not found' });
+                return res.status(404).json({ message: 'No books found in this reading list' });
             }
-
-            // Respond with the reading list and associated books
+    
+            // Respond with the books in the reading list
             res.status(200).json(books);
         } catch (error) {
             if (error.name === 'JsonWebTokenError') {
                 return res.status(401).json({ message: 'Invalid or expired token' });
             }
-            res.status(500).json({ message: 'Error fetching reading list', error: error.message });
+            res.status(500).json({ message: 'Error fetching reading list books', error: error.message });
         }
     },
+    
     
 
     // Function to add a book to a user's reading list

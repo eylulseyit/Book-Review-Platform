@@ -20,7 +20,7 @@ export const fetchProfile = async () => {
         console.log(token);
 
         const response = await fetch(`${BASE_URL}/user/getUserProfile`, { // Profil endpoint'ini kullan
-            method: "GET",
+            method: "POST",
             headers: {
                 Authorization: `Bearer ${token}`, // Token'ı Authorization başlığına ekle
                 "Content-Type": "application/json",
@@ -182,61 +182,33 @@ export const fetchBooksByCategory = async (genre) => {
     }
 };
 
-
-export const fetchUserBookLists = async () => {
+export const fetchReadingListBooks = async () => {
     try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token"); // localStorage'dan token al
+
         if (!token) {
-            throw new Error("Token bulunamadı, giriş yapmanız gerek.");
+            throw new Error('Authorization token is missing');
         }
 
-        const response = await fetch(`${BASE_URL}/user/booklists`, {
-            method: "GET",  // Change to GET method for fetching lists
+        const response = await fetch('/api/getReadingListBooks', {
+            method: "POST",  // Sending POST request
             headers: {
-                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`, // Sending token in Authorization header
             },
         });
 
         if (!response.ok) {
-            const errorResponse = await response.json();
-            throw new Error(errorResponse.message || "Kitap listeleri alınamadı.");
+            throw new Error('Reading list books could not be fetched');
         }
 
-        return await response.json(); // This will return the list IDs
+        const books = await response.json();  // Parse the response as JSON to get the books
+        return books;
     } catch (error) {
-        console.error("fetchUserBookLists hata:", error.message);
-        throw error;
+        throw error;  // Propagate the error to be handled by the caller
     }
 };
 
-export const fetchBooksInList = async (listId) => {
-    try {
-        if (!listId) {
-            throw new Error("Geçerli bir liste ID'si sağlanmadı.");
-        }
 
-        const token = localStorage.getItem("token");
-        if (!token) {
-            throw new Error("Token bulunamadı, giriş yapmanız gerek.");
-        }
 
-        const response = await fetch(`${BASE_URL}/booklist/${listId}`, {
-            method: "POST",  // Change to POST method as per backend
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json', // Ensure content type is set for JSON body
-            },
-            body: JSON.stringify({ listId }), // Send listId in the body as per backend logic
-        });
 
-        if (!response.ok) {
-            const errorResponse = await response.json();
-            throw new Error(errorResponse.message || "Liste içindeki kitaplar alınamadı.");
-        }
-
-        return await response.json(); // This will return the list of books
-    } catch (error) {
-        console.error("fetchBooksInList hata:", error.message);
-        throw error;
-    }
-};

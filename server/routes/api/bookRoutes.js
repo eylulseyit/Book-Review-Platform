@@ -21,6 +21,8 @@ router.put('/:id', BookController.updateBook);
 router.delete('/:id', BookController.deleteBook);
 
 router.post('/getBookByGenre', BookController.getBookByGenre);
+
+router.post('/getReviewsForBook', BookController.getReviews);
 // Add more routes here
 
 module.exports = router;

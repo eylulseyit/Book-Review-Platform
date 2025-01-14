@@ -1,5 +1,7 @@
 const { Sequelize } = require('sequelize'); // Import Sequelize from the Sequelize library
 const Book = require('../models/Book'); // Import the Book model
+const Review = require('../models/Review');
+const Comment = require('../models/Comment');
 //and there, all functions about books or requires book data
 module.exports = {
     // Fetch all books
@@ -115,4 +117,21 @@ module.exports = {
             res.status(500).json({ message: 'Error fetching book', error });
         }
     },
+
+    getReviews: async (req, res) => {
+        const { BookId } = req.body;
+        if (!BookId) {  // Check if BookId is provided
+            return res.status(400).json({ message: 'Book id is required' });
+        }
+        try {
+            const reviews = await Review.findAll({ where: { book_ID: BookId } });
+            if (reviews.length === 0) {  // Check if reviews array is empty
+                return res.status(404).json({ message: 'Reviews not found' });
+            }
+            res.status(200).json(reviews);
+        } catch (error) {
+            res.status(500).json({ message: 'Error fetching reviews', error });
+        }
+    }
+
 };

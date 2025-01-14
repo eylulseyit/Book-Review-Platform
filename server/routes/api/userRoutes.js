@@ -18,7 +18,7 @@ router.delete('/delete-user', UserController.deleteUser);
 
 //router.post('/create-booklist', UserController.createReadingListForUser);
 
-router.get('/booklists', UserController.getUserReadingLists);
+//router.get('/booklists', UserController.getUserReadingLists);
 
 router.post('/booklist', UserController.getReadingListBooks);
 
