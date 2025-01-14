@@ -14,7 +14,7 @@ const BookInList = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'reading_lists',
+                model: 'reading_list',  // Corrected name
                 key: 'list_ID',
             },
         },
@@ -22,7 +22,7 @@ const BookInList = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'books',
+                model: 'book',
                 key: 'book_ID',
             },
         },
@@ -37,5 +37,7 @@ const BookInList = sequelize.define(
 // Manually set the composite primary key
 BookInList.removeAttribute('id');
 BookInList.primaryKeyAttributes = ['list_ID', 'book_ID'];
+BookInList.belongsTo(Book, { foreignKey: 'book_ID' });
+BookInList.belongsTo(ReadingList, { foreignKey: 'list_ID' });
 
 module.exports = BookInList;

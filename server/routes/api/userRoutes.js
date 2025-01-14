@@ -8,7 +8,7 @@ const UserController = require('../../controllers/userController');
 //ALL THE ID'S IN FIRST PART ARE USER ID'S
 router.get('/', UserController.getAllUsers);//GET ALL USERS
 
-router.get('/getUserProfile', UserController.getUserProfile);//GET USER PROFILE
+router.post('/getUserProfile', UserController.getUserProfile);//GET USER PROFILE
 
 router.put('/update-user', UserController.updateUser);//UPDATE USER (username, email, password, send all of them as json
 
