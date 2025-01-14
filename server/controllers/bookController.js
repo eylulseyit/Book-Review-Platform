@@ -84,11 +84,14 @@ module.exports = {
 
     getAllGenres: async (req, res) => {
         try {
-            const book = await Book.findAll({ attributes: ['genre'] });
-            if (!book) {
+            const genres = await Book.findAll({
+                attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('genre')), 'genre']],
+            });
+    
+            if (!genres) {
                 return res.status(404).json({ message: 'Book not found' });
             }
-            res.status(200).json(book);
+            res.status(200).json(genres);
         } catch (error) {
             res.status(500).json({ message: 'Error fetching book', error });
         }
