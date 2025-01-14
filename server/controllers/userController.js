@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken'); // Import jsonwebtoken for generating token
 const ReadingList = require('../models/ReadingList');
 const Book = require('../models/Book');
 const BookInList = require('../models/BookInList');
+const Comment = require('../models/Comment');
+const Review = require('../models/Review');
 
 
 module.exports = {
@@ -224,6 +226,91 @@ module.exports = {
         } catch (error) {
             res.status(500).json({ message: 'Error adding book to list', error });
         }
+    },
+
+    deleteBookFromReadingList: async (req, res) => {
+        try {
+            const { list_ID, book_ID } = req.body;
+
+            // Ensure the reading list and book exist
+            const readingList = await ReadingList.findByPk(list_ID);
+            const book = await Book.findByPk(book_ID);
+
+            if (!readingList || !book) {
+                return res.status(404).json({ message: 'Reading list or book not found' });
+            }
+
+            const bookInList = await BookInList.findOne({
+                where: {
+                    list_ID,
+                    book_ID,
+                },
+            });
+
+            if (!bookInList) {
+                return res.status(404).json({ message: 'Book not found in list' });
+            }
+
+            await bookInList.destroy();
+            res.status(200).json({ message: 'Book removed from list' });
+        } catch (error) {
+            res.status(500).json({ message: 'Error deleting book from list', error });
+        }
+    },
+
+    addReview: async (req, res) => {
+        try {
+            const { rating, review_text, book_ID } = req.body;
+
+            // Ensure the book exists
+            const book = await Book.findByPk(book_ID);
+
+            if (!book) {
+                return res.status(404).json({ message: 'Book not found' });
+            }
+
+            const newReview = await Review.create({
+                rating,
+                review_text,
+                book_ID,
+                user_ID,
+            });
+
+            res.status(201).json(newReview);
+        } catch (error) {
+            res.status(500).json({ message: 'Error adding review', error });
+        }
+    },
+
+    Comment: async (req, res) => {
+        try {
+            const token = req.headers.authorization?.split(' ')[1];
+            if (!token) {
+                return res.status(401).json({ message: 'Authorization token missing' });
+            }
+
+            const decoded = jwt.verify(token, 'your-secret-key');
+            const userId = decoded.id;
+            const { comment_text, review_ID } = req.body;
+
+            // Ensure the review exists
+            const review = await Review.findByPk(review_ID);
+
+            if (!review) {
+                return res.status(404).json({ message: 'Review not found' });
+            }
+
+            const newComment = await Comment.create({
+                comment_text: comment_text,
+                review_ID: review_ID,
+                user_ID: userId,
+            });
+
+            res.status(201).json(newComment);
+        } catch (error) {
+            res.status(500).json({ message: 'Error adding comment', error });
+        }
+
     }
 
 };

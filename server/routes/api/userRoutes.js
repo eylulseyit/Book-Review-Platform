@@ -24,6 +24,8 @@ router.get('/booklist', UserController.getReadingList);
 
 router.post('/addBookToList', UserController.addBookToReadingList);
 
+router.delete('/deleteBookFromList', UserController.deleteBookFromReadingList);
+
 /*
 router.get('/books', userController.getUserBooks);      // Kullanıcıya ait kitaplar
 router.post('/add-book', userController.addBookToProfile); // Kitap ekleme işlemi*/
