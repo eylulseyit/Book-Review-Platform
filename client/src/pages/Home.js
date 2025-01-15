@@ -11,7 +11,6 @@ const Home = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    // Kategorileri almak için useEffect kullanıyoruz
     useEffect(() => {
         const getCategories = async () => {
             try {
@@ -34,10 +33,10 @@ const Home = () => {
             return;
         }
 
-        setSelectedCategory(categoryName);  // Seçilen kategoriyi state'e alıyoruz
+        setSelectedCategory(categoryName);
         try {
-            console.log(`Selected category: ${categoryName}`);  // Seçilen kategori ismini loglayalım
-            const fetchedBooks = await fetchBooksByCategory(categoryName);  // Kategorinin kitaplarını alıyoruz
+            console.log(`Selected category: ${categoryName}`);
+            const fetchedBooks = await fetchBooksByCategory(categoryName);
             setBooks(fetchedBooks);  // Kitapları state'e alıyoruz
         } catch (err) {
             setError('Kitaplar alınamadı');
@@ -48,7 +47,6 @@ const Home = () => {
         return <div>Loading...</div>;
     }
 
-    // Hata durumunda gösterilecek mesaj
     if (error) {
         return <div>{error}</div>;
     }

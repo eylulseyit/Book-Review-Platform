@@ -6,7 +6,7 @@ const Profile = ({ handleLogout }) => {
     const [user, setUser] = useState(null);
     const [error, setError] = useState("");
     const [bio, setBio] = useState("");
-    const [bookLists, setBookLists] = useState([]); // Kitap listesini tutacak state
+    const [bookLists, setBookLists] = useState([]);
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -25,15 +25,14 @@ const Profile = ({ handleLogout }) => {
                     email: data.email || "",
                     password: "", // Şifreyi temizle
                 });
-    
-                // Kitap listesini al
+
                 const books = await fetchReadingListBooks();
                 setBookLists(books);  // Kitapları set et
             } catch (err) {
                 setError(err.message);
             }
         };
-    
+
         fetchUserProfile();
     }, []);
 

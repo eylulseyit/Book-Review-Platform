@@ -41,21 +41,7 @@ export const fetchProfile = async () => {
     }
 };
 
-/*// Profilinize kitap eklemek için
-export const addBookToProfile = async (bookId) => {
-    const response = await fetch(`/api/profile/add-book`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ bookId }),
-    });
-    if (!response.ok) {
-        throw new Error('Kitap profilinize eklenemedi');
-    }
-}; */
 
-// Kullanıcı giriş işlemi
 export const loginUser = async ({ email, password }) => {
     const response = await fetch(`${BASE_URL}/auth/login`, {
         method: "POST",
@@ -160,7 +146,6 @@ export const fetchCategories = async () => {
     }
 };
 
-// Kategorilere göre kitapları getiren fonksiyon
 export const fetchBooksByCategory = async (genre) => {
     try {
         const response = await fetch(`${BASE_URL}/books/getBookByGenre`, {
@@ -203,7 +188,7 @@ export const fetchReadingListBooks = async () => {
         }
 
         const books = await response.json();  // Parse the response as JSON to get the books
-        
+
         // Map the response to only return the `Book` objects
         return books.map(item => item.Book);  // If books are wrapped in a "Book" field
 
@@ -220,7 +205,7 @@ export const addBookToReadingListAndReview = async (bookId, rating, reviewText) 
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`, // Attach the token for authentication
         },
-        body: JSON.stringify({ book_ID: bookId, rating:rating, review_text: reviewText }),
+        body: JSON.stringify({ book_ID: bookId, rating: rating, review_text: reviewText }),
     });
 
     if (!response.ok) {
