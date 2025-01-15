@@ -8,6 +8,7 @@ const Comment = require('../models/Comment');
 const Review = require('../models/Review');
 
 
+
 module.exports = {
     getAllUsers: async (req, res) => {
         try {
@@ -232,14 +233,46 @@ module.exports = {
     // Function to add a book to a user's reading list
     addBookToReadingList: async (req, res) => {
         try {
-            const { list_ID, book_ID } = req.body;
+            const { book_ID } = req.body;
 
+            // Validate book_ID
+            if (!book_ID || typeof book_ID !== 'number') {
+                return res.status(400).json({ message: 'Invalid book_ID provided' });
+            }
+
+            // Extract and validate token
+            const token = req.headers.authorization?.split(' ')[1];
+            if (!token) {
+                return res.status(401).json({ message: 'Authorization token missing' });
+            }
+    
+            const decoded = jwt.verify(token, 'your-secret-key');
+            const userId = decoded.id;
+    
+            // Retrieve the user's reading list (since each user has only one list)
+            const readingList = await ReadingList.findOne({
+                where: { user_ID: userId },
+                attributes: ['list_ID'], // Only fetch the list_ID field
+            });
+    
+            if (!readingList) {
+                return res.status(404).json({ message: 'Reading list not found for this user' });
+            }
+    
+            const list_ID = readingList.list_ID;
             // Ensure the reading list and book exist
-            const readingList = await ReadingList.findByPk(list_ID);
             const book = await Book.findByPk(book_ID);
-
-            if (!readingList || !book) {
-                return res.status(404).json({ message: 'Reading list or book not found' });
+            if (!book) {
+                return res.status(404).json({ message: 'Book not found' });
+            }
+    
+            // Check if book is already in the reading list
+            const existingEntry = await BookInList.findOne({
+                where: { list_ID, book_ID },
+            });
+    
+            if (existingEntry) {
+                return res.status(400).json({ message: 'Book already in the reading list' });
             }
 
             const newBookInList = await BookInList.create({
@@ -342,7 +375,83 @@ module.exports = {
             res.status(500).json({ message: 'Error adding comment', error });
         }
 
-    }
+    },
+
+    addBookAndReview: async (req, res) => {
+        try {
+            const { book_ID, rating, review_text } = req.body;
+    
+            // Validate inputs
+            if (!book_ID || typeof book_ID !== 'number') {
+                return res.status(400).json({ message: 'Invalid book_ID provided' });
+            }
+            if (!rating || typeof rating !== 'number') {
+                return res.status(400).json({ message: 'Invalid rating provided' });
+            }
+            if (!review_text || typeof review_text !== 'string') {
+                return res.status(400).json({ message: 'Invalid review text provided' });
+            }
+    
+            // Extract and validate token
+            const token = req.headers.authorization?.split(' ')[1];
+            if (!token) {
+                return res.status(401).json({ message: 'Authorization token missing' });
+            }
+    
+            const decoded = jwt.verify(token, 'your-secret-key');
+            const userId = decoded.id;
+    
+            // Retrieve the user's reading list
+            const readingList = await ReadingList.findOne({
+                where: { user_ID: userId },
+                attributes: ['list_ID'], // Fetch only the list_ID field
+            });
+    
+            if (!readingList) {
+                return res.status(404).json({ message: 'Reading list not found for this user' });
+            }
+    
+            const list_ID = readingList.list_ID;
+    
+            // Ensure the book exists
+            const book = await Book.findByPk(book_ID);
+            if (!book) {
+                return res.status(404).json({ message: 'Book not found' });
+            }
+    
+            // Check if the book is already in the reading list
+            const existingEntry = await BookInList.findOne({
+                where: { list_ID, book_ID },
+            });
+    
+            if (existingEntry) {
+                return res.status(400).json({ message: 'Book already in the reading list' });
+            }
+    
+            // Add the book to the reading list
+            const newBookInList = await BookInList.create({
+                list_ID,
+                book_ID,
+            });
+    
+            // Add the review for the book
+            const newReview = await Review.create({
+                rating: rating,
+                review_text: review_text,
+                book_ID: book_ID,
+                user_ID: userId,
+            });
+    
+            res.status(201).json({
+                message: 'Book added to the reading list and review submitted successfully',
+                newBookInList,
+                newReview,
+            });
+        } catch (error) {
+            res.status(500).json({ message: 'Error adding book and review', error });
+        }
+    },
+    
 
 };
 

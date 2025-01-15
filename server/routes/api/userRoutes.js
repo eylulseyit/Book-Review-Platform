@@ -32,6 +32,8 @@ router.post('/addComment', UserController.addComment);
 
 router.post('/checkToken', UserController.checkTokenValidation);
 
+router.post('/addBookAndReview', UserController.addBookAndReview); 
+
 /*
 router.get('/books', userController.getUserBooks);      // Kullanıcıya ait kitaplar
 router.post('/add-book', userController.addBookToProfile); // Kitap ekleme işlemi*/

@@ -41,7 +41,7 @@ export const fetchProfile = async () => {
     }
 };
 
-// Profilinize kitap eklemek için
+/*// Profilinize kitap eklemek için
 export const addBookToProfile = async (bookId) => {
     const response = await fetch(`/api/profile/add-book`, {
         method: 'POST',
@@ -53,7 +53,7 @@ export const addBookToProfile = async (bookId) => {
     if (!response.ok) {
         throw new Error('Kitap profilinize eklenemedi');
     }
-};
+}; */
 
 // Kullanıcı giriş işlemi
 export const loginUser = async ({ email, password }) => {
@@ -211,6 +211,26 @@ export const fetchReadingListBooks = async () => {
         throw error;  // Propagate the error to be handled by the caller
     }
 };
+
+export const addBookToReadingListAndReview = async (bookId, rating, reviewText) => {
+    const token = localStorage.getItem('token'); // Assuming you store the token in localStorage
+    const response = await fetch(`${BASE_URL}/user/addBookAndReview`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Attach the token for authentication
+        },
+        body: JSON.stringify({ book_ID: bookId, rating:rating, review_text: reviewText }),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error adding book and review');
+    }
+
+    return response.json();
+};
+
 
 
 
