@@ -42,7 +42,6 @@ module.exports = {
         }
     },
 
-    // User login (you already have this part correctly set up in your previous code)
     login: async (req, res) => {
         const { email, password } = req.body;
 

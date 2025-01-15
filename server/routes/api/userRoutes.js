@@ -2,10 +2,6 @@ const express = require('express');
 const router = express.Router();
 const UserController = require('../../controllers/userController');
 
-
-// Route to get all books
-//router.get('/', userController.);
-//ALL THE ID'S IN FIRST PART ARE USER ID'S
 router.get('/', UserController.getAllUsers);//GET ALL USERS
 
 router.post('/getUserProfile', UserController.getUserProfile);//GET USER PROFILE
@@ -15,10 +11,6 @@ router.put('/update-user', UserController.updateUser);//UPDATE USER (username, e
 router.put('/update-bio', UserController.updateBio);
 
 router.delete('/delete-user', UserController.deleteUser);
-
-//router.post('/create-booklist', UserController.createReadingListForUser);
-
-//router.get('/booklists', UserController.getUserReadingLists);
 
 router.post('/booklist', UserController.getReadingListBooks);
 
@@ -30,12 +22,18 @@ router.post('/addReview', UserController.addReview);
 
 router.post('/addComment', UserController.addComment);
 
-router.post('/checkToken', UserController.checkTokenValidation);
-
 router.post('/addBookAndReview', UserController.addBookAndReview); 
+
+router.post('/checkToken', UserController.checkTokenValidation);
 
 /*
 router.get('/books', userController.getUserBooks);      // Kullanıcıya ait kitaplar
 router.post('/add-book', userController.addBookToProfile); // Kitap ekleme işlemi*/
+
+
+
+//router.post('/create-booklist', UserController.createReadingListForUser);
+
+//router.get('/booklists', UserController.getUserReadingLists);
 
 module.exports = router;

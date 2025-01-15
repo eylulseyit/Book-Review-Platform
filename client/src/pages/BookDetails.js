@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchBooks, addBookToReadingListAndReview } from '../services/api';
+import { fetchBooks, fetchBookReviews, addBookToReadingListAndReview } from '../services/api';
 
 const BookDetails = () => {
     const { id } = useParams();
@@ -13,19 +13,25 @@ const BookDetails = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
-        const getBook = async () => {
+        const getBookDetailsAndReviews = async () => {
+            setLoading(true);
             try {
-                const books = await fetchBooks();
+                // Fetch the book details
+                const books = await fetchBooks(); // Assuming this function is working
                 const foundBook = books.find((b) => b.book_ID === parseInt(id));
                 setBook(foundBook);
-                setReviews(foundBook.reviews || []);
+
+                // Fetch the reviews using the book ID
+                const fetchedReviews = await fetchBookReviews(foundBook.book_ID);
+                setReviews(fetchedReviews);
             } catch (err) {
-                setError('Error loading book details.');
+                setError('Error loading book details or reviews.');
             } finally {
                 setLoading(false);
             }
         };
-        getBook();
+
+        getBookDetailsAndReviews();
     }, [id]);
 
     const handleAddToProfileAndReview = async (e) => {
