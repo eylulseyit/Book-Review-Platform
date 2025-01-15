@@ -30,7 +30,7 @@ const Review = sequelize.define('Review', {
     timestamps: false
 });
 
-// İlişkiyi tanımlıyoruz
+// relationships
 Review.belongsTo(User, { foreignKey: 'user_ID' });
 Review.belongsTo(Book, { foreignKey: 'book_ID' });
 
