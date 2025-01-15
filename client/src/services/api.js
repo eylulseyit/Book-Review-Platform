@@ -231,6 +231,24 @@ export const addBookToReadingListAndReview = async (bookId, rating, reviewText) 
     return response.json();
 };
 
+// Fetch reviews for a specific book
+export const fetchBookReviews = async (bookId) => {
+    const response = await fetch(`${BASE_URL}/books/getReviewsForBook`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ BookId: bookId }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Could not fetch reviews');
+    }
+
+    return response.json();
+};
+
+
 
 
 
