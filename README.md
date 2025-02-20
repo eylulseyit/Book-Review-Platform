@@ -19,18 +19,15 @@ Book Review Platform is a web application where users can rate, review, and orga
 The application uses a MySQL database running locally. It stores user information, book details, reviews, and reading lists.
 
 ### Database Setup
-1. Install MySQL and create a database named `book_review_platform`.
-2. Import the provided SQL script to create tables and sample data:
-   ```bash
-   mysql -u root -p book_review_platform < database/database.sql
+1. Install MySQL and create a database named `book_site`. Note: Use an underscore (`_`) instead of a hyphen (`-`) to avoid connection issues.
+2. Configure your database credentials in `server/config/database.js`:
+   ```javascript
+   const sequelize = new Sequelize('book_site', 'root', 'your_password', {
+       host: 'localhost',
+       dialect: 'mysql',
+   });
    ```
-3. Update the `.env` file with your MySQL credentials:
-   ```env
-   DB_HOST=localhost
-   DB_USER=root
-   DB_PASSWORD=your_password
-   DB_NAME=book_review_platform
-   ```
+3. Ensure MySQL is running locally before starting the server.
 
 ## Installation
 1. Clone the repository:
@@ -59,6 +56,7 @@ Refer to `api_documentation.md` for details about available endpoints, request/r
 ```
 ├── client/             # Frontend code
 ├── server/             # Backend code
+│   ├── config/         # Database configuration
 │   ├── controllers/    # Route handlers
 │   ├── models/         # Database schemas
 │   ├── routes/         # API routes
@@ -77,4 +75,3 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 For questions or feedback, please open an issue on GitHub or contact the project maintainers directly.
-
